@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Hackdash Lite</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <h1>Crear Dashboard</h1>
+
+  <form id="dashboardForm">
+    <input type="text" name="title" placeholder="Título del Dashboard" required>
+    <textarea name="description" placeholder="Descripción del Dashboard" required></textarea>
+    <button type="submit">Crear</button>
+  </form>
+
+  <hr>
+
+  <h2>Dashboards existentes</h2>
+  <div id="dashboardsList"></div>
+
+  <script src="assets/js/script.js"></script>
+  <script src="./js/verifylogin.js"></script>
+</body>
+</html>

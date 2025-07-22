@@ -1,0 +1,81 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 30px auto;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+h1, h2 {
+  color: #222;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+input, textarea, button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #0057ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #003fcc;
+}
+
+.dashboard-card {
+  background: #fff;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.dashboard-card h3 {
+  margin: 0;
+}
+
+.dashboard-card a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #0057ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #0057ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button:hover {
+  background-color: #003fcc;
+}
+
+.btn-danger {
+  background-color: #ff4d4d;
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+}
