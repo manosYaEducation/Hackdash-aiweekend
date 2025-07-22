@@ -3,7 +3,7 @@ document.getElementById('dashboardForm').addEventListener('submit', function (e)
   e.preventDefault();
   const formData = new FormData(this);
 
-  fetch('api/create_dashboard.php', {
+  fetch('../api/create_dashboard.php', {
     method: 'POST',
     body: formData
   })
@@ -17,7 +17,7 @@ document.getElementById('dashboardForm').addEventListener('submit', function (e)
 
 // Mostrar dashboards
 function cargarDashboards() {
-  fetch('api/get_dashboards.php')
+  fetch('../api/get_dashboards.php')
     .then(res => res.json())
     .then(dashboards => {
       const container = document.getElementById('dashboardsList');
@@ -51,7 +51,7 @@ form.addEventListener('submit', function (e) {
   const formData = new FormData(this);
   formData.append('slug', d.slug);
 
-  fetch('api/update_dashboard.php', {
+  fetch('../api/update_dashboard.php', {
     method: 'POST',
     body: formData
   })
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', cargarDashboards);
 function eliminarDashboard(slug) {
   if (!confirm("¿Estás seguro de que quieres eliminar este dashboard? Se eliminarán también sus proyectos.")) return;
 
-  fetch('api/delete_dashboard.php', {
+  fetch('../api/delete_dashboard.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'

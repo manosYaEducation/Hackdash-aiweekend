@@ -8,7 +8,7 @@ if (!slug) {
 }
 
 // Cargar datos del dashboard y sus proyectos
-fetch(`api/get_dashboard.php?slug=${slug}`)
+fetch(`../api/get_dashboard.php?slug=${slug}`)
   .then(res => res.json())
   .then(data => {
     document.getElementById('dashboardTitle').textContent = data.title;
@@ -41,7 +41,7 @@ fetch(`api/get_dashboard.php?slug=${slug}`)
       const formData = new FormData(this);
       formData.append('id', p.id);
 
-      fetch('api/update_project.php', {
+      fetch('../api/update_project.php', {
         method: 'POST',
         body: formData
       })
@@ -61,7 +61,7 @@ document.getElementById('projectForm').addEventListener('submit', function (e) {
   const formData = new FormData(this);
   formData.append('slug', slug);
 
-  fetch('api/create_project.php', {
+  fetch('../api/create_project.php', {
     method: 'POST',
     body: formData
   })
@@ -75,7 +75,7 @@ document.getElementById('projectForm').addEventListener('submit', function (e) {
 function eliminarProyecto(id) {
   if (!confirm("¿Eliminar este proyecto?")) return;
 
-  fetch('api/delete_project.php', {
+  fetch('../api/delete_project.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
