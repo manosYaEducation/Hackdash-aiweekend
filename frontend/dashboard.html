@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-  <h1 id="dashboardTitle">Cargando...</h1>
-  <p id="dashboardDescription"></p>
+  <div class="dashboard-header">
+    <div class="dashboard-info">
+      <h1 id="dashboardTitle">Cargando...</h1>
+      <p id="dashboardDescription"></p>
+    </div>
+    <div class="dashboard-actions">
+      <button id="deleteDashboardBtn" class="btn-danger" style="display: none;">Eliminar Dashboard</button>
+      <button onclick="window.location.href='blank.html'" class="btn-secondary">Volver</button>
+    </div>
+  </div>
 
   <h2>Agregar Proyecto</h2>
   <form id="projectForm">
@@ -20,8 +28,8 @@
   <h2>Proyectos</h2>
   <div id="projectList"></div>
 
-  <script src="../frontend/js/dashboard.js"></script>
-  <script src="../frontend/js/script.js"></script>
-  <script src="../frontend/js/verifylogin.js"></script>
+  <script src="./js/dashboard.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="./js/verifylogin.js"></script>
 </body>
 </html>

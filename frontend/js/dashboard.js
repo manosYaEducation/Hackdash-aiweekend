@@ -1,18 +1,61 @@
 const slug = new URLSearchParams(window.location.search).get('slug');
 console.log("Slug recibido:", slug);
 
-
 if (!slug) {
   alert("Falta el slug del dashboard");
   location.href = "blank.html";
 }
 
-// Cargar datos del dashboard y sus proyectos
-fetch(`../api/get_dashboard.php?slug=${slug}`)
+// Función para eliminar dashboard
+function eliminarDashboard() {
+  if (!confirm("¿Estás seguro de que quieres eliminar este dashboard? Esta acción no se puede deshacer.")) {
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('slug', slug);
+
+  fetch('../../api/delete_dashboard.php', {
+    method: 'POST',
+    body: formData
+  })
   .then(res => res.json())
   .then(data => {
+    if (data.success) {
+      alert(data.message);
+      window.location.href = 'blank.html';
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error al eliminar el dashboard');
+  });
+}
+
+// Cargar datos del dashboard y sus proyectos
+console.log('Iniciando carga del dashboard...');
+fetch(`../../api/get_dashboard.php?slug=${slug}`)
+  .then(res => {
+    console.log('Respuesta del servidor:', res);
+    return res.json();
+  })
+  .then(data => {
+    console.log('Datos del dashboard:', data);
     document.getElementById('dashboardTitle').textContent = data.title;
     document.getElementById('dashboardDescription').textContent = data.description;
+    
+    // Mostrar botón de eliminar
+    const deleteBtn = document.getElementById('deleteDashboardBtn');
+    console.log('Botón de eliminar encontrado:', deleteBtn);
+    if (deleteBtn) {
+      deleteBtn.style.display = 'inline-block';
+      deleteBtn.onclick = eliminarDashboard;
+      console.log('Botón de eliminar configurado correctamente');
+    } else {
+      console.error('No se encontró el botón de eliminar');
+    }
 
     const list = document.getElementById('projectList');
     data.projects.forEach(p => {
@@ -41,7 +84,7 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
       const formData = new FormData(this);
       formData.append('id', p.id);
 
-      fetch('../api/update_project.php', {
+             fetch('../../api/update_project.php', {
         method: 'POST',
         body: formData
       })
@@ -54,6 +97,10 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
 
   list.appendChild(card);
 });
+  })
+  .catch(error => {
+    console.error('Error al cargar el dashboard:', error);
+    alert('Error al cargar el dashboard: ' + error.message);
   });
 
 document.getElementById('projectForm').addEventListener('submit', function (e) {
@@ -61,7 +108,7 @@ document.getElementById('projectForm').addEventListener('submit', function (e) {
   const formData = new FormData(this);
   formData.append('slug', slug);
 
-  fetch('../api/create_project.php', {
+  fetch('../../api/create_project.php', {
     method: 'POST',
     body: formData
   })
@@ -75,7 +122,7 @@ document.getElementById('projectForm').addEventListener('submit', function (e) {
 function eliminarProyecto(id) {
   if (!confirm("¿Eliminar este proyecto?")) return;
 
-  fetch('../api/delete_project.php', {
+  fetch('../../api/delete_project.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
