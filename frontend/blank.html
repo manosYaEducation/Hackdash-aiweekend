@@ -25,27 +25,80 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem 2rem;
+      padding: 0 2rem 2rem 2rem;
     }
 
     header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #ffffff;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
       width: 100%;
-      box-sizing: border-box;
+      max-width: 1200px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .header-center {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .btn-salir {
+      background: none;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      margin-left: -0.5rem;
+    }
+
+    .btn-salir:hover {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-salir svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .header-center {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
     }
 
     header h1 {
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0;
+      color: #000000;
     }
 
     header p {
@@ -54,14 +107,8 @@
       font-size: 0.9rem;
     }
 
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
     .btn-create {
-      background-color: #111827;
+      background-color: #000000;
       color: white;
       padding: 0.75rem 1.25rem;
       border-radius: 8px;
@@ -70,6 +117,7 @@
       cursor: pointer;
       border: none;
       white-space: nowrap;
+      transition: background-color 0.2s ease;
     }
 
     .btn-create:hover {
@@ -164,14 +212,96 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      position: relative;
     }
 
     .dashboard-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      justify-content: space-between;
       gap: 0.5rem;
+    }
+
+    .dashboard-title-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .dashboard-title {
       font-weight: 600;
       font-size: 1.1rem;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    .dashboard-menu {
+      position: relative;
+    }
+
+    .menu-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      color: #6b7280;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .menu-button:hover {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      min-width: 140px;
+      z-index: 10;
+      display: none;
+    }
+
+    .menu-dropdown.show {
+      display: block;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.9rem;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .menu-item:hover {
+      background-color: #f9fafb;
+    }
+
+    .menu-item.delete {
+      color: #dc2626;
+    }
+
+    .menu-item.delete:hover {
+      background-color: #fef2f2;
+    }
+
+    .menu-item svg {
+      width: 16px;
+      height: 16px;
     }
 
     .dot {
@@ -212,12 +342,23 @@
     .btn-open {
       margin-top: 1rem;
       padding: 0.6rem;
-      background-color: #111827;
-      color: white;
-      border: none;
+      background-color: #ffffff;
+      color: #1f2937;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
       font-weight: 500;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .btn-open:hover {
+      background-color: #f9fafb;
+      border-color: #9ca3af;
     }
 
     /* Estilos para las tarjetas de dashboard */
@@ -230,42 +371,25 @@
     }
 
     .btn-open {
-      background-color: #111827;
-      color: white;
-      border: none;
+      background-color: #ffffff;
+      color: #1f2937;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
       cursor: pointer;
       padding: 12px 16px;
       font-size: 14px;
-      flex: 3;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 44px;
       margin-top: 0;
+      transition: all 0.2s ease;
     }
 
     .btn-open:hover {
-      background-color: #374151;
-    }
-
-    .btn-delete {
-      background-color: transparent;
-      color: #ef4444;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      padding: 12px 16px;
-      font-size: 16px;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-    }
-
-    .btn-delete:hover {
-      background-color: #fef2f2;
+      background-color: #f9fafb;
+      border-color: #9ca3af;
     }
 
     /* Modal para crear dashboard */
@@ -417,26 +541,26 @@
       color: #374151;
       text-align: center;
     }
-
-    .header-content {
-      display: block;
-      background-color: #ffffff;
-      border-radius: 1px;
-      padding: 10px;
-      max-width: 400px;
-      height: 100%;
-      width: 100%;
-    }
   </style>
 </head>
 
 <body>
   <header>
     <div class="header-content">
-      <h1>Mis Dashboards</h1>
-      <p>Gestiona todos tus espacios de trabajo</p>
+      <div class="header-left">
+        <button class="btn-salir" onclick="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+          </svg>
+          Salir
+        </button>
+        <div class="header-center">
+          <h1>Mis Dashboards</h1>
+          <p>Gestiona todos tus espacios de trabajo</p>
+        </div>
+      </div>
+      <button class="btn-create" onclick="showCreateModal()">+ Crear Dashboard</button>
     </div>
-    <button class="btn-create" onclick="showCreateModal()">+ Crear Dashboard</button>
   </header>
 
   <div class="container">
@@ -599,6 +723,15 @@
         hideCreateModal();
       }
     });
+
+    function logout() {
+      // Limpiar datos de sesión
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('username');
+      
+      // Redirigir a la página de login
+      window.location.href = 'login.html';
+    }
   </script>
 </body>
 

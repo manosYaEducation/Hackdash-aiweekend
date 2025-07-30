@@ -24,7 +24,7 @@ if (!$dashboard) {
   exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, title, description FROM projects WHERE dashboard_id = ?");
+$stmt = $pdo->prepare("SELECT id, title, description, status, created_at FROM projects WHERE dashboard_id = ?");
 $stmt->execute([$dashboard['id']]);
 $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

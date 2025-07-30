@@ -1,35 +1,827 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F9FAFB;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #F9FAFB;
+      min-height: calc(100vh - 80px);
+    }
+
+    .dashboard-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .dashboard-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: #000000;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .back-button:hover {
+      background-color: #f3f4f6;
+    }
+
+    .back-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .dashboard-title-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dashboard-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+    }
+
+    .dashboard-subtitle {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .dashboard-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    .btn-primary {
+      background-color: #111827;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #374151;
+    }
+
+    .btn-success {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #059669;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    .stat-card h3 {
+      font-size: 0.875rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .stat-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .stat-icon-blue {
+      background-color: #dbeafe;
+      color: #2563eb;
+    }
+
+    .stat-icon-green {
+      background-color: #dcfce7;
+      color: #16a34a;
+    }
+
+    .stat-icon-purple {
+      background-color: #ede9fe;
+      color: #9333ea;
+    }
+
+    .stat-icon-yellow {
+      background-color: #fef9c3;
+      color: #ca8a04;
+    }
+
+    .stat-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      background-size: 20px;
+      padding-left: 40px;
+    }
+
+    .search-box input::placeholder {
+      color: #9ca3af;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-title-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .project-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #1e293b;
+      margin: 0;
+    }
+
+    .project-menu {
+      position: relative;
+    }
+
+    .menu-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      color: #6b7280;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .menu-button:hover {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      min-width: 140px;
+      z-index: 10;
+      display: none;
+    }
+
+    .menu-dropdown.show {
+      display: block;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.9rem;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .menu-item:hover {
+      background-color: #f9fafb;
+    }
+
+    .menu-item.delete {
+      color: #dc2626;
+    }
+
+    .menu-item.delete:hover {
+      background-color: #fef2f2;
+    }
+
+    .menu-item svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .project-description {
+      color: #64748b;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .project-members {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .member-avatars {
+      display: flex;
+      align-items: center;
+    }
+
+    .member-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-left: -8px;
+      border: 2px solid white;
+    }
+
+    .member-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .project-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .status-in-progress {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-completed {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-inactive {
+      background-color: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.blue { background-color: #3b82f6; }
+    .dot.green { background-color: #10b981; }
+    .dot.purple { background-color: #a855f7; }
+    .dot.red { background-color: #ef4444; }
+    .dot.orange { background-color: #f97316; }
+    .dot.yellow { background-color: #eab308; }
+    .dot.pink { background-color: #ec4899; }
+    .dot.indigo { background-color: #6366f1; }
+
+    .members-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .section-header p {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .member-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .member-card:last-child {
+      border-bottom: none;
+    }
+
+    .member-avatar-large {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .member-info h4 {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .member-info p {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .member-role {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: auto;
+    }
+
+    .role-owner {
+      background-color: #111827;
+      color: white;
+    }
+
+    .role-admin {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .role-member {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #64748b;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    .empty-state p {
+      margin-bottom: 1.5rem;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-group select {
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .form-group select option {
+      padding: 0.5rem;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Navbar Full Width -->
   <div class="dashboard-header">
-    <div class="dashboard-info">
-      <h1 id="dashboardTitle">Cargando...</h1>
-      <p id="dashboardDescription"></p>
-    </div>
-    <div class="dashboard-actions">
-      <button id="deleteDashboardBtn" class="btn-danger" style="display: none;">Eliminar Dashboard</button>
-      <button onclick="window.location.href='blank.html'" class="btn-secondary">Volver</button>
+    <div class="header-content">
+      <div class="dashboard-info">
+        <button class="back-button" onclick="window.location.href='blank.html'">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Volver
+        </button>
+        <div class="dashboard-title-section">
+          <div class="dot blue"></div>
+          <div>
+            <h1 class="dashboard-title" id="dashboardTitle">Cargando...</h1>
+            <p class="dashboard-subtitle" id="dashboardDescription">Cargando descripción...</p>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-actions">
+        <button class="btn btn-secondary" onclick="showInviteModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+          </svg>
+          Invitar Miembros
+        </button>
+        <button class="btn btn-primary" onclick="showCreateProjectModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Nuevo Proyecto
+        </button>
+      </div>
     </div>
   </div>
 
-  <h2>Agregar Proyecto</h2>
-  <form id="projectForm">
-    <input type="text" name="title" placeholder="Título del Proyecto" required>
-    <textarea name="description" placeholder="Descripción" required></textarea>
-    <button type="submit">Crear Proyecto</button>
-  </form>
+  <div class="dashboard-container">
 
-  <h2>Proyectos</h2>
-  <div id="projectList"></div>
+    <!-- Statistics -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Proyectos</h3>
+        <div class="stat-value" id="totalProjects">0</div>
+        <div class="stat-icon stat-icon-blue">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <h3>Proyectos en Progreso</h3>
+        <div class="stat-value" id="activeProjects">0</div>
+        <div class="stat-icon stat-icon-green">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Miembros</h3>
+        <div class="stat-value" id="totalMembers">0</div>
+        <div class="stat-icon stat-icon-purple">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <h3>Completados</h3>
+        <div class="stat-value" id="completedProjects">0</div>
+        <div class="stat-icon stat-icon-yellow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input type="text" placeholder="Buscar proyectos..." id="searchInput">
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-grid" id="projectList">
+      <div class="empty-state">
+        <h3>No hay proyectos</h3>
+        <p>Crea tu primer proyecto para comenzar</p>
+        <button class="btn btn-primary" onclick="showCreateProjectModal()">Crear Proyecto</button>
+      </div>
+    </div>
+
+    <!-- Members Section -->
+    <div class="members-section">
+      <div class="section-header">
+        <div>
+          <h2>Miembros del Dashboard</h2>
+          <p>Gestiona los miembros de este dashboard</p>
+        </div>
+      </div>
+      <div id="membersList">
+        <div class="member-card">
+          <div class="member-avatar-large">AG</div>
+          <div class="member-info">
+            <h4>Ana García</h4>
+            <p>ana@example.com</p>
+          </div>
+          <span class="member-role role-owner">Propietario</span>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar-large">CL</div>
+          <div class="member-info">
+            <h4>Carlos López</h4>
+            <p>carlos@example.com</p>
+          </div>
+          <span class="member-role role-admin">Administrador</span>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar-large">MR</div>
+          <div class="member-info">
+            <h4>María Rodríguez</h4>
+            <p>maria@example.com</p>
+          </div>
+          <span class="member-role role-member">Miembro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Project Modal -->
+  <div id="createProjectModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Crear Nuevo Proyecto</h2>
+      <form id="projectForm">
+        <div class="form-group">
+          <label for="projectTitle">Título del Proyecto</label>
+          <input type="text" id="projectTitle" name="title" placeholder="Ej: Website Redesign" required>
+        </div>
+        <div class="form-group">
+          <label for="projectDescription">Descripción</label>
+          <textarea id="projectDescription" name="description" placeholder="Describe el proyecto..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="projectStatus">Estado del Proyecto</label>
+          <select id="projectStatus" name="status" required>
+            <option value="in_progress">En Progreso</option>
+            <option value="completed">Completado</option>
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-secondary" onclick="hideCreateProjectModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Crear Proyecto</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="./js/dashboard.js"></script>
-  <script src="./js/script.js"></script>
   <script src="./js/verifylogin.js"></script>
+  <script>
+    function showCreateProjectModal() {
+      document.getElementById('createProjectModal').style.display = 'flex';
+    }
+
+    function hideCreateProjectModal() {
+      document.getElementById('createProjectModal').style.display = 'none';
+      document.getElementById('projectForm').reset();
+    }
+
+    function showInviteModal() {
+      alert('Función de invitar miembros próximamente disponible');
+    }
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('createProjectModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        hideCreateProjectModal();
+      }
+    });
+
+    // Función para buscar proyectos
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const projectCards = document.querySelectorAll('.project-card');
+      
+      projectCards.forEach(card => {
+        const title = card.querySelector('.project-title').textContent.toLowerCase();
+        const description = card.querySelector('.project-description').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
