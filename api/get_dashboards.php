@@ -1,8 +1,13 @@
 <?php
+// Configurar headers antes de cualquier salida
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+// Deshabilitar la salida de errores de PHP
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // Manejar solicitudes preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -87,5 +92,12 @@ try {
         'success' => false, 
         'message' => 'Error del servidor: ' . $e->getMessage(),
         'error_type' => 'Exception'
+    ]);
+} catch (Error $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Error fatal: ' . $e->getMessage(),
+        'error_type' => 'Error'
     ]);
 }

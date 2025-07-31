@@ -36,8 +36,21 @@ class DashboardManager {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            const result = await response.json();
-            console.log('Datos recibidos:', result);
+            // Obtener el texto de la respuesta para debug
+            const responseText = await response.text();
+            console.log('Respuesta completa del servidor:', responseText);
+            
+            // Intentar parsear como JSON
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (jsonError) {
+                console.error('Error al parsear JSON:', jsonError);
+                console.error('Respuesta recibida:', responseText);
+                throw new Error('La respuesta del servidor no es JSON válido. Posible error de PHP o configuración del servidor.');
+            }
+            
+            console.log('Datos parseados:', result);
             
             if (result.success) {
                 this.displayDashboards(result.data);
@@ -47,6 +60,10 @@ class DashboardManager {
         } catch (error) {
             console.error('Error al cargar dashboards:', error);
             this.showMessage('Error de conexión: ' + error.message, 'error');
+            
+            // Mostrar información adicional de debug
+            console.log('URL de la API:', `${API_BASE}get_dashboards.php`);
+            console.log('API_BASE:', API_BASE);
         }
     }
 

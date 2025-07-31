@@ -249,7 +249,10 @@ function toggleProjectMenu(projectId) {
 }
 
 function viewProject(projectId) {
-  alert('Función de ver proyecto próximamente disponible');
+  // Navegar a la página de detalle del proyecto
+  const urlParams = new URLSearchParams(window.location.search);
+  const dashboardSlug = urlParams.get('slug');
+  window.location.href = `project.html?id=${projectId}&dashboard=${dashboardSlug}`;
 }
 
 function editProject(projectId) {
