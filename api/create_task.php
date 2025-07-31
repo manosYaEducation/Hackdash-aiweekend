@@ -35,16 +35,18 @@ try {
     }
 
     // Obtener los datos del formulario
-    $slug = $_POST['slug'] ?? null;
+    $projectId = $_POST['project_id'] ?? null;
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
-    $color = $_POST['color'] ?? 'blue';
+    $priority = $_POST['priority'] ?? 'medium';
+    $assignedTo = trim($_POST['assigned_to'] ?? '');
+    $dueDate = $_POST['due_date'] ?? null;
 
     // Validar datos requeridos
-    if (!$slug) {
+    if (!$projectId) {
         echo json_encode([
             'success' => false,
-            'message' => 'Slug del dashboard no proporcionado'
+            'message' => 'ID del proyecto no proporcionado'
         ]);
         exit;
     }
@@ -65,37 +67,57 @@ try {
         exit;
     }
 
-    // Verificar que el dashboard existe
-    $stmt = $pdo->prepare("SELECT id FROM dashboards WHERE slug = ?");
-    $stmt->execute([$slug]);
-    $existingDashboard = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$existingDashboard) {
+    if (!$dueDate) {
         echo json_encode([
             'success' => false,
-            'message' => 'Dashboard no encontrado'
+            'message' => 'La fecha de vencimiento es requerida'
         ]);
         exit;
     }
 
-    // Actualizar el dashboard
+    // Verificar que el proyecto existe
+    $stmt = $pdo->prepare("SELECT id FROM projects WHERE id = ?");
+    $stmt->execute([$projectId]);
+    $existingProject = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$existingProject) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Proyecto no encontrado'
+        ]);
+        exit;
+    }
+
+    // Validar prioridad
+    $validPriorities = ['low', 'medium', 'high'];
+    if (!in_array($priority, $validPriorities)) {
+        $priority = 'medium';
+    }
+
+    // Insertar la nueva tarea
     $stmt = $pdo->prepare("
-        UPDATE dashboards 
-        SET title = ?, description = ?, color = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE slug = ?
+        INSERT INTO tasks (project_id, title, description, priority, assigned_to, due_date, status)
+        VALUES (?, ?, ?, ?, ?, ?, 'pending')
     ");
     
-    $result = $stmt->execute([$title, $description, $color, $slug]);
+    $result = $stmt->execute([
+        $projectId,
+        $title,
+        $description,
+        $priority,
+        $assignedTo ?: null,
+        $dueDate
+    ]);
     
     if ($result) {
         echo json_encode([
             'success' => true,
-            'message' => 'Dashboard actualizado correctamente'
+            'message' => 'Tarea creada correctamente'
         ]);
     } else {
         echo json_encode([
             'success' => false,
-            'message' => 'Error al actualizar el dashboard'
+            'message' => 'Error al crear la tarea'
         ]);
     }
     
@@ -121,4 +143,4 @@ try {
         'error_type' => 'Error'
     ]);
 }
-?>
+?> 

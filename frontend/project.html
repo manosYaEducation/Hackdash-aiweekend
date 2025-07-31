@@ -148,6 +148,89 @@
     </div>
   </div>
 
+  <!-- Modal para crear tarea -->
+  <div id="createTaskModal" class="modal">
+    <div class="modal-content">
+      <h2>Crear Nueva Tarea</h2>
+      <form id="taskForm">
+        <div class="form-group">
+          <label for="taskTitle">Título de la Tarea</label>
+          <input type="text" id="taskTitle" name="title" placeholder="Ej: Diseñar wireframes" required>
+        </div>
+        <div class="form-group">
+          <label for="taskDescription">Descripción</label>
+          <textarea id="taskDescription" name="description" placeholder="Describe la tarea..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="taskPriority">Prioridad</label>
+          <select id="taskPriority" name="priority" required>
+            <option value="low">Baja</option>
+            <option value="medium" selected>Media</option>
+            <option value="high">Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="taskAssignedTo">Asignar a</label>
+          <input type="text" id="taskAssignedTo" name="assigned_to" placeholder="Nombre del responsable">
+        </div>
+        <div class="form-group">
+          <label for="taskDueDate">Fecha de vencimiento</label>
+          <input type="date" id="taskDueDate" name="due_date" required>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" onclick="hideCreateTaskModal()">Cancelar</button>
+          <button type="submit" class="btn-submit">Crear Tarea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para editar tarea -->
+  <div id="editTaskModal" class="modal">
+    <div class="modal-content">
+      <h2>Editar Tarea</h2>
+      <form id="editTaskForm">
+        <input type="hidden" id="editTaskId" name="task_id">
+        <div class="form-group">
+          <label for="editTaskTitle">Título de la Tarea</label>
+          <input type="text" id="editTaskTitle" name="title" placeholder="Ej: Diseñar wireframes" required>
+        </div>
+        <div class="form-group">
+          <label for="editTaskDescription">Descripción</label>
+          <textarea id="editTaskDescription" name="description" placeholder="Describe la tarea..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editTaskPriority">Prioridad</label>
+          <select id="editTaskPriority" name="priority" required>
+            <option value="low">Baja</option>
+            <option value="medium" selected>Media</option>
+            <option value="high">Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editTaskAssignedTo">Asignar a</label>
+          <input type="text" id="editTaskAssignedTo" name="assigned_to" placeholder="Nombre del responsable">
+        </div>
+        <div class="form-group">
+          <label for="editTaskDueDate">Fecha de vencimiento</label>
+          <input type="date" id="editTaskDueDate" name="due_date" required>
+        </div>
+        <div class="form-group">
+          <label for="editTaskStatus">Estado</label>
+          <select id="editTaskStatus" name="status" required>
+            <option value="pending">Pendiente</option>
+            <option value="in_progress">En Progreso</option>
+            <option value="completed">Completada</option>
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" onclick="hideEditTaskModal()">Cancelar</button>
+          <button type="submit" class="btn-submit">Actualizar Tarea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="./js/verifylogin.js"></script>
   <script>
     let currentProjectId = null;
@@ -197,6 +280,38 @@
       } else {
         alert('ID de proyecto no encontrado');
         goBack();
+      }
+
+      // Event listener para el formulario de crear tarea
+      const taskForm = document.getElementById('taskForm');
+      if (taskForm) {
+        taskForm.addEventListener('submit', createTask);
+      }
+
+      // Cerrar modal al hacer clic fuera
+      const createTaskModal = document.getElementById('createTaskModal');
+      if (createTaskModal) {
+        createTaskModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            hideCreateTaskModal();
+          }
+        });
+      }
+
+      // Event listener para el formulario de editar tarea
+      const editTaskForm = document.getElementById('editTaskForm');
+      if (editTaskForm) {
+        editTaskForm.addEventListener('submit', updateTask);
+      }
+
+      // Cerrar modal de editar al hacer clic fuera
+      const editTaskModal = document.getElementById('editTaskModal');
+      if (editTaskModal) {
+        editTaskModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            hideEditTaskModal();
+          }
+        });
       }
     });
 
@@ -297,11 +412,22 @@
       const priorityClass = `priority-${task.priority}`;
       const priorityText = task.priority === 'high' ? 'Alta' : task.priority === 'medium' ? 'Media' : 'Baja';
       
-      // Determinar si la tarea está completada basándose en el status
-      const isCompleted = task.status === 'completed';
-      const statusIcon = isCompleted ? 
-        '<div class="task-status completed"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg></div>' : 
-        '<div class="task-status pending"></div>';
+      // Determinar el icono según el estado de la tarea
+      let statusIcon = '';
+      switch(task.status) {
+        case 'pending':
+          statusIcon = '<div class="task-status pending"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>';
+          break;
+        case 'in_progress':
+          statusIcon = '<div class="task-status in-progress"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg></div>';
+          break;
+        case 'completed':
+          statusIcon = '<div class="task-status completed"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg></div>';
+          break;
+
+        default:
+          statusIcon = '<div class="task-status pending"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>';
+      }
       
       taskCard.innerHTML = `
         <div class="task-header">
@@ -315,12 +441,35 @@
               <div class="task-description">${task.description}</div>
             </div>
           </div>
-                     <button class="task-menu-btn">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-               <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z" />
-               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-             </svg>
-           </button>
+          <div class="task-menu-container">
+            <button class="task-menu-btn" onclick="toggleTaskMenu(${task.id})">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </button>
+            <div id="task-menu-${task.id}" class="task-menu-dropdown">
+              <button class="task-menu-item" onclick="editTask(${task.id})">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                </svg>
+                Editar
+              </button>
+              <button class="task-menu-item" onclick="viewTaskDetails(${task.id})">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.885 4.5 12 4.5c4.085 0 8.526 3.11 9.964 7.178.07.207.07.431 0 .639C20.526 16.89 16.085 20 12 20c-4.085 0-8.526-3.11-9.964-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Ver Detalles
+              </button>
+              <button class="task-menu-item delete" onclick="deleteTask(${task.id})">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+                Eliminar
+              </button>
+            </div>
+          </div>
         </div>
         <div class="task-meta">
           <div class="task-assigned">
@@ -471,7 +620,15 @@
     }
 
     function showCreateTaskModal() {
-      alert('Función de crear tarea próximamente disponible');
+      document.getElementById('createTaskModal').style.display = 'block';
+      // Establecer fecha mínima como hoy
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('taskDueDate').min = today;
+    }
+
+    function hideCreateTaskModal() {
+      document.getElementById('createTaskModal').style.display = 'none';
+      document.getElementById('taskForm').reset();
     }
 
     function showUploadFileModal() {
@@ -482,8 +639,176 @@
       alert('Función de invitar miembro próximamente disponible');
     }
 
+    function createTask(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      formData.append('project_id', currentProjectId);
+      
+      // Validar campos requeridos
+      const title = formData.get('title').trim();
+      const description = formData.get('description').trim();
+      const dueDate = formData.get('due_date');
+      
+      if (!title || !description || !dueDate) {
+        alert('Por favor completa todos los campos requeridos');
+        return;
+      }
+
+      fetch('../api/create_task.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Tarea creada correctamente');
+          hideCreateTaskModal();
+          loadTasks(); // Recargar la lista de tareas
+          updateProjectStats(); // Actualizar estadísticas
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al crear la tarea');
+      });
+    }
+
     function toggleProjectMenu() {
       alert('Menú del proyecto próximamente disponible');
+    }
+
+    // Funciones para el menú de tareas
+    function toggleTaskMenu(taskId) {
+      // Cerrar todos los menús abiertos
+      document.querySelectorAll('.task-menu-dropdown').forEach(dropdown => {
+        dropdown.classList.remove('show');
+      });
+      
+      // Abrir/cerrar el menú específico
+      const dropdown = document.getElementById(`task-menu-${taskId}`);
+      if (dropdown) {
+        dropdown.classList.toggle('show');
+      }
+    }
+
+    // Cerrar menús al hacer clic fuera
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.task-menu-container')) {
+        document.querySelectorAll('.task-menu-dropdown').forEach(dropdown => {
+          dropdown.classList.remove('show');
+        });
+      }
+    });
+
+    function editTask(taskId) {
+      // Cerrar el menú
+      document.getElementById(`task-menu-${taskId}`).classList.remove('show');
+      
+      // Cargar los datos de la tarea
+      const apiUrl = window.location.origin + '/Hackdash-aiweekend/api/get_task.php?id=' + taskId;
+      console.log('🌐 URL de la API:', apiUrl);
+      fetch(apiUrl)
+        .then(response => {
+          console.log('📡 Respuesta del servidor:', response);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('📦 Datos recibidos:', data);
+          if (data.success) {
+            const task = data.task;
+            
+            // Llenar el formulario con los datos actuales
+            document.getElementById('editTaskId').value = task.id;
+            document.getElementById('editTaskTitle').value = task.title;
+            document.getElementById('editTaskDescription').value = task.description;
+            document.getElementById('editTaskPriority').value = task.priority;
+            document.getElementById('editTaskAssignedTo').value = task.assigned_to || '';
+            document.getElementById('editTaskDueDate').value = task.due_date;
+            document.getElementById('editTaskStatus').value = task.status;
+            
+            // Mostrar el modal
+            showEditTaskModal();
+          } else {
+            alert('Error al cargar los datos de la tarea: ' + (data.message || 'Error desconocido'));
+          }
+        })
+        .catch(error => {
+          console.error('❌ Error al cargar tarea:', error);
+          alert('Error al cargar los datos de la tarea: ' + error.message);
+        });
+    }
+
+    function viewTaskDetails(taskId) {
+      // Cerrar el menú
+      document.getElementById(`task-menu-${taskId}`).classList.remove('show');
+      
+      // Aquí puedes implementar la lógica para ver detalles de la tarea
+      alert(`Ver detalles de la tarea ${taskId} próximamente disponible`);
+    }
+
+    function deleteTask(taskId) {
+      // Cerrar el menú
+      document.getElementById(`task-menu-${taskId}`).classList.remove('show');
+      
+      if (confirm('¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.')) {
+        // Aquí puedes implementar la lógica para eliminar la tarea
+        alert(`Eliminar tarea ${taskId} próximamente disponible`);
+      }
+    }
+
+    function showEditTaskModal() {
+      document.getElementById('editTaskModal').style.display = 'block';
+      // Establecer fecha mínima como hoy
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('editTaskDueDate').min = today;
+    }
+
+    function hideEditTaskModal() {
+      document.getElementById('editTaskModal').style.display = 'none';
+      document.getElementById('editTaskForm').reset();
+    }
+
+    function updateTask(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      formData.append('project_id', currentProjectId);
+      
+      // Validar campos requeridos
+      const title = formData.get('title').trim();
+      const description = formData.get('description').trim();
+      const dueDate = formData.get('due_date');
+      
+      if (!title || !description || !dueDate) {
+        alert('Por favor completa todos los campos requeridos');
+        return;
+      }
+
+      fetch('../api/update_task.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Tarea actualizada correctamente');
+          hideEditTaskModal();
+          loadTasks(); // Recargar la lista de tareas
+          updateProjectStats(); // Actualizar estadísticas
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al actualizar la tarea');
+      });
     }
   </script>
 </body>

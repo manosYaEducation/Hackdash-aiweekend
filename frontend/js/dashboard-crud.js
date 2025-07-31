@@ -19,6 +19,12 @@ class DashboardManager {
             dashboardForm.addEventListener('submit', (e) => this.createDashboard(e));
         }
 
+        // Formulario de editar dashboard
+        const editDashboardForm = document.getElementById('editDashboardForm');
+        if (editDashboardForm) {
+            editDashboardForm.addEventListener('submit', (e) => this.updateDashboard(e));
+        }
+
         // Búsqueda
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -238,6 +244,40 @@ class DashboardManager {
         }
     }
 
+    async updateDashboard(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const slug = formData.get('slug');
+        const title = formData.get('title').trim();
+        const description = formData.get('description').trim();
+        const color = formData.get('color');
+
+        if (!title || !description) {
+            this.showMessage('Por favor completa todos los campos', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}update_dashboard.php`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showMessage(result.message, 'success');
+                hideEditModal();
+                this.loadDashboards(); // Recargar la lista
+            } else {
+                this.showMessage(result.message, 'error');
+            }
+        } catch (error) {
+            this.showMessage('Error al actualizar dashboard: ' + error.message, 'error');
+        }
+    }
+
     async viewDashboard(slug) {
         window.location.href = `dashboard.html?slug=${slug}`;
     }
@@ -265,9 +305,27 @@ class DashboardManager {
     }
 
     async editDashboard(slug) {
-        // Por ahora, redirigir a la página de edición o mostrar modal
-        this.showMessage('Función de edición próximamente disponible', 'info');
-        // TODO: Implementar modal de edición
+        try {
+            // Obtener los datos del dashboard en modo edición (sin proyectos)
+            const response = await fetch(`${API_BASE}get_dashboard.php?slug=${slug}&edit=true`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const dashboard = result.dashboard;
+                // Mostrar el modal de edición con los datos actuales
+                showEditModal(
+                    dashboard.slug,
+                    dashboard.title,
+                    dashboard.description,
+                    dashboard.color || 'blue'
+                );
+            } else {
+                this.showMessage('Error al cargar los datos del dashboard', 'error');
+            }
+        } catch (error) {
+            console.error('Error al cargar dashboard para editar:', error);
+            this.showMessage('Error al cargar los datos del dashboard', 'error');
+        }
     }
 
     async deleteDashboard(slug, title) {

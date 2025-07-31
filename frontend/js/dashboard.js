@@ -47,28 +47,30 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
   .then(data => {
     console.log('Datos del dashboard:', data);
     
-    if (!data || data.message === 'Dashboard no encontrado') {
+    if (!data.success || !data.dashboard) {
       alert('Dashboard no encontrado');
       window.location.href = 'blank.html';
       return;
     }
     
-    document.getElementById('dashboardTitle').textContent = data.title;
-    document.getElementById('dashboardDescription').textContent = data.description;
+    const dashboard = data.dashboard;
+    
+    document.getElementById('dashboardTitle').textContent = dashboard.title;
+    document.getElementById('dashboardDescription').textContent = dashboard.description;
     
     // Actualizar el color del punto basado en el color del dashboard
     const dotElement = document.querySelector('.dashboard-title-section .dot');
-    if (dotElement && data.color) {
-      dotElement.className = `dot ${data.color}`;
+    if (dotElement && dashboard.color) {
+      dotElement.className = `dot ${dashboard.color}`;
     }
     
     const list = document.getElementById('projectList');
     
-    if (data.projects && data.projects.length > 0) {
+    if (data.dashboard.projects && data.dashboard.projects.length > 0) {
       // Calcular estadísticas
-      const totalProjects = data.projects.length;
-      const inProgressProjects = data.projects.filter(p => p.status === 'in_progress').length;
-      const completedProjects = data.projects.filter(p => p.status === 'completed').length;
+      const totalProjects = data.dashboard.projects.length;
+      const inProgressProjects = data.dashboard.projects.filter(p => p.status === 'in_progress').length;
+      const completedProjects = data.dashboard.projects.filter(p => p.status === 'completed').length;
       const totalMembers = 3; // Por ahora hardcodeado
       
       // Actualizar estadísticas
@@ -77,8 +79,8 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
       document.getElementById('completedProjects').textContent = completedProjects;
       document.getElementById('totalMembers').textContent = totalMembers;
       
-      // Generar tarjetas de proyectos
-      list.innerHTML = data.projects.map(project => {
+      // Generar tarjetas de proyectos con progreso
+      const projectCards = data.dashboard.projects.map(project => {
         const status = project.status || 'in_progress';
         let statusClass = 'status-in-progress';
         let statusText = 'En Progreso';
@@ -94,7 +96,7 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
         const color = colors[Math.floor(Math.random() * colors.length)];
         
         return `
-          <div class="project-card">
+          <div class="project-card" data-project-id="${project.id}" onclick="handleProjectCardClick(event, '${project.id}')">
             <div class="project-header">
               <div class="project-title-section">
                 <div class="dot ${color}"></div>
@@ -139,10 +141,23 @@ fetch(`../api/get_dashboard.php?slug=${slug}`)
               </div>
               <span>Creado el ${createdDate}</span>
             </div>
+            <div class="project-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <span class="progress-text">0%</span>
+            </div>
             <div class="project-status ${statusClass}">${statusText}</div>
           </div>
         `;
-      }).join('');
+      });
+      
+      list.innerHTML = projectCards.join('');
+      
+      // Cargar progreso para cada proyecto
+      data.dashboard.projects.forEach(project => {
+        loadProjectProgress(project.id);
+      });
     } else {
       // Mostrar estado vacío
       list.innerHTML = `
@@ -257,4 +272,39 @@ function viewProject(projectId) {
 
 function editProject(projectId) {
   alert('Función de editar proyecto próximamente disponible');
+}
+
+function loadProjectProgress(projectId) {
+  fetch(`../api/get_project_stats.php?id=${projectId}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const projectCard = document.querySelector(`[data-project-id="${projectId}"]`);
+        if (projectCard) {
+          const progressFill = projectCard.querySelector('.progress-fill');
+          const progressText = projectCard.querySelector('.progress-text');
+          
+          if (progressFill && progressText) {
+            progressFill.style.width = `${data.stats.progress}%`;
+            progressText.textContent = `${data.stats.progress}%`;
+          }
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error al cargar progreso del proyecto:', error);
+    });
+}
+
+function handleProjectCardClick(event, projectId) {
+  // Evitar la navegación si se hizo clic en el menú o sus elementos
+  if (event.target.closest('.project-menu') || 
+      event.target.closest('.menu-button') || 
+      event.target.closest('.menu-dropdown') ||
+      event.target.closest('.menu-item')) {
+    return;
+  }
+  
+  // Navegar al proyecto
+  viewProject(projectId);
 }

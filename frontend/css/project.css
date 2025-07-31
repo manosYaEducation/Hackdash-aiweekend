@@ -365,6 +365,24 @@
     background-color: transparent;
   }
 
+  .task-status.pending svg {
+    width: 12px;
+    height: 12px;
+    color: #6b7280;
+  }
+
+  .task-status.in-progress {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  .task-status.in-progress svg {
+    width: 12px;
+    height: 12px;
+  }
+
+
+
 
 
   .task-menu-btn {
@@ -392,6 +410,66 @@
     height: 16px;
   }
 
+  /* Estilos para el dropdown del menú de tareas */
+  .task-menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    min-width: 160px;
+    display: none;
+    overflow: hidden;
+  }
+
+  .task-menu-dropdown.show {
+    display: block;
+  }
+
+  .task-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .task-menu-item:hover {
+    background-color: #f9fafb;
+  }
+
+  .task-menu-item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .task-menu-item.delete {
+    color: #dc2626;
+  }
+
+  .task-menu-item.delete:hover {
+    background-color: #fef2f2;
+  }
+
+  .task-menu-item.delete svg {
+    color: #dc2626;
+  }
+
+  /* Posicionamiento relativo para el contenedor del menú */
+  .task-menu-container {
+    position: relative;
+  }
 
 
   .task-description {
@@ -618,4 +696,83 @@
     .tab {
       flex: 1 1 50%;
     }
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+  }
+
+  .modal h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .form-group textarea {
+    height: 100px;
+    resize: vertical;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .btn-cancel {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .btn-submit {
+    padding: 0.75rem 1.5rem;
+    background: #111827;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
   }

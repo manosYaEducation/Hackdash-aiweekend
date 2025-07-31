@@ -672,6 +672,66 @@
     </div>
   </div>
 
+  <!-- Modal para editar dashboard -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2>Editar Dashboard</h2>
+      <form id="editDashboardForm">
+        <input type="hidden" id="editSlug" name="slug">
+        <div class="form-group">
+          <label for="editTitle">Título del Dashboard</label>
+          <input type="text" id="editTitle" name="title" placeholder="Ej: Proyectos Personales" required>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Descripción</label>
+          <textarea id="editDescription" name="description" placeholder="Describe el propósito de este dashboard..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Color del Dashboard</label>
+          <div class="color-options" id="editColorOptions">
+            <div class="color-option" data-color="blue">
+              <div class="color-circle blue"></div>
+              <span>Azul</span>
+            </div>
+            <div class="color-option" data-color="green">
+              <div class="color-circle green"></div>
+              <span>Verde</span>
+            </div>
+            <div class="color-option" data-color="purple">
+              <div class="color-circle purple"></div>
+              <span>Púrpura</span>
+            </div>
+            <div class="color-option" data-color="red">
+              <div class="color-circle red"></div>
+              <span>Rojo</span>
+            </div>
+            <div class="color-option" data-color="orange">
+              <div class="color-circle orange"></div>
+              <span>Naranja</span>
+            </div>
+            <div class="color-option" data-color="yellow">
+              <div class="color-circle yellow"></div>
+              <span>Amarillo</span>
+            </div>
+            <div class="color-option" data-color="pink">
+              <div class="color-circle pink"></div>
+              <span>Rosa</span>
+            </div>
+            <div class="color-option" data-color="indigo">
+              <div class="color-circle indigo"></div>
+              <span>Índigo</span>
+            </div>
+          </div>
+          <input type="hidden" id="editSelectedColor" name="color" value="blue">
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" onclick="hideEditModal()">Cancelar</button>
+          <button type="submit" class="btn-submit">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="./js/dashboard-crud.js"></script>
   <script src="./js/verifylogin.js"></script>
   <script>
@@ -732,6 +792,62 @@
       // Redirigir a la página de login
       window.location.href = 'login.html';
     }
+
+    // Funciones para el modal de edición
+    function showEditModal(slug, title, description, color) {
+      document.getElementById('editSlug').value = slug;
+      document.getElementById('editTitle').value = title;
+      document.getElementById('editDescription').value = description;
+      document.getElementById('editSelectedColor').value = color;
+      
+      // Seleccionar el color correcto en el modal
+      selectEditColor(color);
+      
+      document.getElementById('editModal').style.display = 'block';
+    }
+    
+    function hideEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+      document.getElementById('editDashboardForm').reset();
+      // Resetear la selección de color
+      document.querySelectorAll('#editColorOptions .color-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      selectEditColor('blue');
+    }
+
+    function selectEditColor(color) {
+      // Remover selección anterior
+      document.querySelectorAll('#editColorOptions .color-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Seleccionar el nuevo color
+      const selectedOption = document.querySelector(`#editColorOptions [data-color="${color}"]`);
+      if (selectedOption) {
+        selectedOption.classList.add('selected');
+      }
+      
+      // Actualizar el campo hidden
+      document.getElementById('editSelectedColor').value = color;
+    }
+    
+    // Agregar event listeners para las opciones de color del modal de edición
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('#editColorOptions .color-option').forEach(option => {
+        option.addEventListener('click', function() {
+          const color = this.getAttribute('data-color');
+          selectEditColor(color);
+        });
+      });
+      
+      // Cerrar modal de edición al hacer clic fuera
+      document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          hideEditModal();
+        }
+      });
+    });
   </script>
 </body>
 
