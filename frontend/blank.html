@@ -50,6 +50,82 @@
       max-width: 1200px;
     }
 
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .user-email {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+      
+      .header-left {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+      }
+      
+      .header-right {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+      }
+      
+      .user-info {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .btn-create {
+        width: 100%;
+      }
+    }
+
     .header-left {
       display: flex;
       align-items: center;
@@ -559,7 +635,16 @@
           <p>Gestiona todos tus espacios de trabajo</p>
         </div>
       </div>
-      <button class="btn-create" onclick="showCreateModal()">+ Crear Dashboard</button>
+      <div class="header-right">
+        <div class="user-info" id="userInfo">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="userName">Usuario</div>
+            <div class="user-email" id="userEmail">usuario@email.com</div>
+          </div>
+        </div>
+        <button class="btn-create" onclick="showCreateModal()">+ Crear Dashboard</button>
+      </div>
     </div>
   </header>
 
@@ -847,6 +932,23 @@
           hideEditModal();
         }
       });
+
+      // Cargar información del usuario
+      function loadUserInfo() {
+        const username = localStorage.getItem('userName') || localStorage.getItem('username') || 'Usuario';
+        const userEmail = localStorage.getItem('userEmail') || 'usuario@email.com';
+        
+        // Obtener las iniciales del nombre para el avatar
+        const initials = username.split(' ').map(name => name.charAt(0)).join('').toUpperCase();
+        
+        // Actualizar los elementos del DOM
+        document.getElementById('userName').textContent = username;
+        document.getElementById('userEmail').textContent = userEmail;
+        document.getElementById('userAvatar').textContent = initials;
+      }
+
+      // Cargar información del usuario cuando se carga la página
+      loadUserInfo();
     });
   </script>
 </body>
