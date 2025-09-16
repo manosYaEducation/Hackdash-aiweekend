@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
   
             // Redireccionar a la página de login
-            window.location.href = "login.html";
+            window.location.href = "../frontend/login";
           } else {
             // Mostrar mensaje de error
             alert(
