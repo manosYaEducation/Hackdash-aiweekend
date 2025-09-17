@@ -103,8 +103,7 @@
         <a href="#">Contacto</a>
       </div>
 
-      Versión 17-09-2025-inicio-cambio de Mblanco
-      Versión 17-09-2025-inicio-cambio de Jbarrios
+      Versión 17-09-2025
     </footer>
   </div>
 </body>
