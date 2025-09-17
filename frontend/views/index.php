@@ -102,6 +102,8 @@
         <a href="#">Política de Privacidad</a>
         <a href="#">Contacto</a>
       </div>
+
+      Versión 17-09-2025
     </footer>
   </div>
 </body>
