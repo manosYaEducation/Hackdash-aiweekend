@@ -103,7 +103,7 @@
         <a href="#">Contacto</a>
       </div>
 
-      Versión 17-09-2025
+      Versión 17-09-2025-inicio
     </footer>
   </div>
 </body>
