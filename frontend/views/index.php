@@ -103,7 +103,7 @@
         <a href="#">Contacto</a>
       </div>
 
-      Versión 17-09-2025-inicio
+      Versión 17-09-2025-inicio-cambio de Jbarrios
     </footer>
   </div>
 </body>
