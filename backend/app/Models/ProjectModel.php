@@ -54,6 +54,21 @@ class ProjectModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllProjectsPaginated(int $limit, int $offset): array
+    {
+        $stmt = $this->conn->prepare("SELECT p.*, d.title as dashboard_name, d.slug as dashboard_slug FROM projects p JOIN dashboards d ON p.dashboard_id = d.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?");
+        $stmt->bindParam(1, $limit, PDO::PARAM_INT);
+        $stmt->bindParam(2, $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalProjectsCount(): int
+    {
+        $stmt = $this->conn->query("SELECT COUNT(*) FROM projects");
+        return (int) $stmt->fetchColumn();
+    }
+
     public function updateProject(int $projectId, string $title, string $description, string $status): bool
     {
         $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ? WHERE id = ?");

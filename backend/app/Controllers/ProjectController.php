@@ -67,6 +67,32 @@ class ProjectController
         $this->sendJsonResponse(['success' => true, 'data' => $projects], 200);
     }
 
+    public function getAllProjectsPaginated()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $page = (int)($_GET['page'] ?? 1);
+        $limit = (int)($_GET['limit'] ?? 10);
+
+        $offset = ($page - 1) * $limit;
+
+        $projects = $this->projectModel->getAllProjectsPaginated($limit, $offset);
+        $totalProjects = $this->projectModel->getTotalProjectsCount();
+
+        $this->sendJsonResponse([
+            'success' => true,
+            'data' => $projects,
+            'pagination' => [
+                'total' => $totalProjects,
+                'page' => $page,
+                'limit' => $limit,
+                'totalPages' => ceil($totalProjects / $limit)
+            ]
+        ], 200);
+    }
+
     public function getTasks()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {

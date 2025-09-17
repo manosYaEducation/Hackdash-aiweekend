@@ -7,6 +7,7 @@ use App\Backend\Controllers\TaskController;
 
 return [
     'login' => ['controller' => AuthController::class, 'method' => 'login', 'httpMethod' => 'POST'],
+    
     'dashboards' => ['controller' => DashboardController::class, 'method' => 'getDashboards', 'httpMethod' => 'GET'],
     'dashboard/create' => ['controller' => DashboardController::class, 'method' => 'create', 'httpMethod' => 'POST'],
     'dashboard/get' => ['controller' => DashboardController::class, 'method' => 'getDashboard', 'httpMethod' => 'GET'],
@@ -16,6 +17,7 @@ return [
     // Rutas para Proyectos
     'project/create' => ['controller' => ProjectController::class, 'method' => 'create', 'httpMethod' => 'POST'],
     'project/getProjects' => ['controller' => ProjectController::class, 'method' => 'getProjects', 'httpMethod' => 'GET'],
+    'project/all' => ['controller' => ProjectController::class, 'method' => 'getAllProjectsPaginated', 'httpMethod' => 'GET'],
     'project/get' => ['controller' => ProjectController::class, 'method' => 'getProject', 'httpMethod' => 'GET'],
     'project/update' => ['controller' => ProjectController::class, 'method' => 'update', 'httpMethod' => 'POST'],
     'project/delete' => ['controller' => ProjectController::class, 'method' => 'delete', 'httpMethod' => 'POST'],

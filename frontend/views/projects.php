@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorar Proyectos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="public/css/style.css">
+  <link rel="stylesheet" href="public/css/projects.css">
+</head>
+<body>
+  <div class="flex flex-col min-h-screen bg-background">
+    <!-- Header -->
+    <header>
+      <div class="container header-content">
+        <a href="index" class="logo">Comunidad de Proyectos IT</a>
+        <nav class="nav-desktop">
+          <a href="#features">Beneficios</a>
+          <a href="projects">Explorar Proyectos</a>
+          <a href="#join">Únete</a>
+        </nav>
+        <div class="header-actions">
+          <a href="login" class="btn btn-primary"> Ingresar</a>
+        </div>
+      </div>
+    </header>
+
+<body>
+      <!-- Projects Section -->
+      <section id="projects" class="projects-overview">
+        <div class="container">
+          <h2 class="projects-overview-title">Explora Nuestros Proyectos</h2>
+          <p class="projects-overview-desc">Descubre una variedad de proyectos de desarrollo gestionados con Hackdash.</p>
+          <div class="projects-grid" id="allProjectsGrid">
+            <!-- Projects will be loaded here via JavaScript -->
+          </div>
+          <div class="pagination-controls" id="paginationControls">
+            <!-- Pagination buttons will be loaded here via JavaScript -->
+          </div>
+        </div>
+      </section>
+
+    <!-- Footer -->
+    <footer>
+      <div>&copy; 2025 Comunidad de Proyectos IT. Todos los derechos reservados.</div>
+      <div class="footer-nav">
+        <a href="#">Términos de Servicio</a>
+        <a href="#">Política de Privacidad</a>
+        <a href="#">Contacto</a>
+      </div>
+    </footer>
+  </div>
+  <script src="public/js/all-projects-ui.js"></script>
+</body>
+</html>
