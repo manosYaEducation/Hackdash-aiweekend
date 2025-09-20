@@ -6,7 +6,7 @@
   <title>Explorar Proyectos</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="public/css/style.css">
-  <link rel="stylesheet" href="public/css/projects.css">
+  <link rel="stylesheet" href="public/css/project-list.css">
 </head>
 <body>
   <div class="flex flex-col min-h-screen bg-background">
@@ -16,7 +16,7 @@
         <a href="index" class="logo">Comunidad de Proyectos IT</a>
         <nav class="nav-desktop">
           <a href="#features">Beneficios</a>
-          <a href="projects">Explorar Proyectos</a>
+          <a href="project-list">Explorar Proyectos</a>
           <a href="#join">Únete</a>
         </nav>
         <div class="header-actions">
@@ -50,6 +50,6 @@
       </div>
     </footer>
   </div>
-  <script src="public/js/all-projects-ui.js"></script>
+  <script src="public/js/project-list.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const allProjectsGrid = document.getElementById('allProjectsGrid');
     const paginationControls = document.getElementById('paginationControls');
     let currentPage = 1;
-    const projectsPerPage = 6; // You can adjust this value
+    const projectsPerPage = 6;
 
 async function fetchProjects(page) {
     try {
@@ -32,7 +32,6 @@ async function fetchProjects(page) {
             allProjectsGrid.innerHTML = '<p>No hay proyectos disponibles en este momento.</p>';
             return;
         }
-
         projects.forEach(project => {
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
@@ -43,7 +42,7 @@ async function fetchProjects(page) {
                     <span class="status ${project.status === 'completed' ? 'status-completed' : 'status-in-progress'}">${project.status === 'completed' ? 'Completado' : 'En Progreso'}</span>
                     <span class="dashboard-link">Dashboard: <a href="/Hackdash-aiweekend/frontend/dashboard?slug=${project.dashboard_slug}">${project.dashboard_name}</a></span>
                 </div>
-                <a href="${API_BASE}project/get?id=${project.id}" class="btn-ver-mas">Ver más</a>
+                <a href="project-detail?id=${project.id}" class="btn-ver-mas">Ver más</a>
             `;
             allProjectsGrid.appendChild(projectCard);
         });
