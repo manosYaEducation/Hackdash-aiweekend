@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="stat-card">
-        <h3>Integración</h3>
+        <h3>Proyectos en Progreso</h3>
         <div class="stat-value" id="activeProjects">0</div>
         <div class="stat-icon stat-icon-green">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="stat-card">
-        <h3>Consolidación</h3>
+        <h3>Completados</h3>
         <div class="stat-value" id="completedProjects">0</div>
         <div class="stat-icon stat-icon-yellow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -101,7 +101,7 @@
     </div>
 
     <!-- Members Section -->
-    <!-- <div class="members-section">
+    <div class="members-section">
       <div class="section-header">
         <div>
           <h2>Miembros del Dashboard</h2>
@@ -135,7 +135,7 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <!-- Create Project Modal -->
   <div id="createProjectModal" class="modal" style="display: none;">

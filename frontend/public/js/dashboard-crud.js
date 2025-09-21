@@ -95,8 +95,11 @@ class DashboardManager {
             const color = dashboard.color || 'blue';
             const members = Math.floor(Math.random() * 10) + 3; // Simulado por ahora
             const projects = dashboard.total_projects || 0;
-            const lastActivity = new Date(dashboard.created_at).toLocaleDateString('es-ES');
-            const owner = dashboard.created_by || 'Ana García';
+          const lastActivity = new Date(dashboard.created_at).toLocaleString('es-ES', {
+                                                                            dateStyle: 'short',
+                                                                            timeStyle: 'short'
+                                                                            });
+  const owner = dashboard.created_by || 'Ana García';
             
             return `
                 <div class="dashboard-card" data-slug="${dashboard.slug}">
@@ -157,7 +160,7 @@ class DashboardManager {
                             </div>
                             <span style="font-size: 0.85rem; color: #6b7280;">${owner}</span>
                         </div>
-                        <span style="font-size: 0.85rem; color: #6b7280;">Última actividad: ${lastActivity}</span>
+                        <span style="font-size: 0.85rem; color: #6b7280;">Creado: ${lastActivity}</span>
                     </div>
                     
                     <div class="dashboard-actions">
@@ -177,13 +180,13 @@ class DashboardManager {
     updateSummaryCards(dashboards) {
         const totalDashboards = dashboards.length;
         const totalProjects = dashboards.reduce((sum, d) => sum + parseInt(d.total_projects || 0), 0);
-        const totalMembers = dashboards.length * 5; // Simulado
-        const activeDashboards = dashboards.length;
+        // const totalMembers = dashboards.length * 5; // Simulado
+      //  const activeDashboards = dashboards.length;
 
         document.getElementById('totalDashboards').textContent = totalDashboards;
         document.getElementById('totalProjects').textContent = totalProjects;
-        document.getElementById('totalMembers').textContent = totalMembers;
-        document.getElementById('activeDashboards').textContent = activeDashboards;
+        // document.getElementById('totalMembers').textContent = totalMembers;
+       // document.getElementById('activeDashboards').textContent = activeDashboards;
     }
 
     filterDashboards(searchTerm) {

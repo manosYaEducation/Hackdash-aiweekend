@@ -182,7 +182,7 @@ class ProjectController
             $this->sendJsonResponse(['success' => false, 'message' => 'ID de proyecto requerido.'], 400);
         }
 
-        $members = $this->memberModel->getMembersByProjectId((int)$projectId);
+        $members = $this->memberModel->getMembersByProjectIdAiWeekend((int)$projectId);
 
         $this->sendJsonResponse(['success' => true, 'members' => $members], 200);
     }

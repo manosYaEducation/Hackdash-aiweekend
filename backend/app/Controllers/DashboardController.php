@@ -49,7 +49,7 @@ class DashboardController
             $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el dashboard'], 500);
         }
     }
-
+//este se usa en cuando se buscan todos
     public function getDashboards()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -64,7 +64,7 @@ class DashboardController
             $this->sendJsonResponse(['success' => false, 'message' => 'No se pudieron obtener los dashboards.'], 500);
         }
     }
-
+    //este se usa en el dashboard en si mismo
     public function getDashboard()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {

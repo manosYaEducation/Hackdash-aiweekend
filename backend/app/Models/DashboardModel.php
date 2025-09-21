@@ -24,7 +24,7 @@ class DashboardModel
         }
         return null;
     }
-
+    
     public function findBySlug(string $slug): ?array
     {
         $stmt = $this->conn->prepare("SELECT * FROM dashboards WHERE slug = ?");
@@ -32,6 +32,8 @@ class DashboardModel
         $dashboard = $stmt->fetch(PDO::FETCH_ASSOC);
         return $dashboard ?: null;
     }
+
+  
 
     private function generateUniqueSlug(string $title): string
     {
@@ -62,7 +64,7 @@ class DashboardModel
 
     public function getAllDashboards(): array
     {
-        $stmt = $this->conn->query("SELECT * FROM dashboards ORDER BY created_at DESC");
+        $stmt = $this->conn->query("SELECT  d.slug, d.title, d.description, d.color,d.created_at, d.created_by,(SELECT Count(*) FROM `projects` t where t.dashboard_id = d.id) as total_projects FROM dashboards d ORDER BY created_at DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

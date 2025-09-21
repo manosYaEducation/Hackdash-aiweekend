@@ -371,6 +371,9 @@
       color: #64748b;
       margin-bottom: 1rem;
       font-size: 0.9rem;
+      overflow-wrap: break-word; 
+      word-break: break-word;
+      white-space: normal; /* asegura que el texto pueda saltar de línea */
     }
 
     .project-meta {

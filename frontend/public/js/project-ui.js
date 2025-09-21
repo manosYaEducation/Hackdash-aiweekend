@@ -63,6 +63,18 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
           }
         });
       }
+
+        // Cerrar modal al hacer clic fuera
+      const createMemberModal = document.getElementById('createMemberModal');
+      if (createMemberModal) {
+        createMemberModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            hideCreateTaskModal();
+          }
+        });
+      }
+
+      
     
       // Event listener para el formulario de editar tarea
       const editTaskForm = document.getElementById('editTaskForm');
@@ -414,13 +426,22 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
       document.getElementById('createTaskModal').style.display = 'none';
       document.getElementById('taskForm').reset();
     }
+
+  function hidecreateMemberModal() {
+      document.getElementById('createMemberModal').style.display = 'none';
+      document.getElementById('taskForm').reset();
+    }
+    
     
     function showUploadFileModal() {
       alert('Función de subir archivo próximamente disponible');
     }
     
     function showInviteMemberModal() {
-      alert('Función de invitar miembro próximamente disponible');
+      document.getElementById('createMemberModal').style.display = 'block';
+      // // Establecer fecha mínima como hoy
+      // const today = new Date().toISOString().split('T')[0];
+      // document.getElementById('taskDueDate').min = today;
     }
     
     function createTask(event) {
