@@ -4,6 +4,7 @@ use App\Backend\Controllers\AuthController;
 use App\Backend\Controllers\DashboardController;
 use App\Backend\Controllers\ProjectController;
 use App\Backend\Controllers\TaskController;
+use App\Backend\Controllers\MemberController;
 
 return [
     'login' => ['controller' => AuthController::class, 'method' => 'login', 'httpMethod' => 'POST'],
@@ -32,4 +33,8 @@ return [
     'task/update' => ['controller' => TaskController::class, 'method' => 'update', 'httpMethod' => 'POST'],
     'task/delete' => ['controller' => TaskController::class, 'method' => 'delete', 'httpMethod' => 'POST'],
     'task/updateStatus' => ['controller' => TaskController::class, 'method' => 'updateStatus', 'httpMethod' => 'POST'],
+
+    //Rutas para miembros
+
+      'members/getAll' => ['controller' => MemberController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
 ];
