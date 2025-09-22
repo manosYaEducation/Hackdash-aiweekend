@@ -10,7 +10,7 @@ return [
     '' => __DIR__ . '/views/index.php', // Default route
 
     //Vistas de usuario y visitante
-    'login' => __DIR__ . '/views/user/login.php',
+    'user-login' => __DIR__ . '/views/user/login.php',
     'register' => __DIR__ . '/views/user/register.php',
     'recover-password' => __DIR__ . '/views/user/recover-password.php',
     'home' => __DIR__ . '/views/user/home.php',

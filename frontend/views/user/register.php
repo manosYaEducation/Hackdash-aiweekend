@@ -24,7 +24,7 @@
                 <button type="submit" class="submit-button">Registrarse</button>
             </form>
             <p class="form-link">
-                ¿Ya tienes cuenta? <a href="login">Inicia sesión aquí</a>
+                ¿Ya tienes cuenta? <a href="user-login">Inicia sesión aquí</a>
             </p>
         </div>
     </section>
