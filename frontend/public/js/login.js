@@ -130,6 +130,7 @@ loginF.addEventListener("submit", async (event) => {
       }
 
       // Redirigir al usuario
+      //TODO: Redirgir al usuario a distintas paginas dependiendo de su rol
       window.location.href = "blank";
     } else {
       mostrarMensajeLogin(result.error || "Usuario o contraseña incorrectos.");
