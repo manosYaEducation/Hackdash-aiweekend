@@ -6,18 +6,21 @@ use PDO;
 use App\Backend\Models\Database;
 use App\Backend\Models\DashboardModel;
 use App\Backend\Models\TaskModel;
+use App\Backend\Models\MemberModel;
 
 class ProjectModel
 {
     private $conn;
     private $dashboardModel;
     private $taskModel;
+    private $memberModel;
 
     public function __construct()
     {
         $this->conn = Database::getInstance()->getConnection();
         $this->dashboardModel = new DashboardModel();
         $this->taskModel = new TaskModel();
+        $this->memberModel = new MemberModel();
     }
 
     public function createProject(string $dashboardSlug, string $title, string $description, string $status): ?int
@@ -72,13 +75,18 @@ class ProjectModel
         $totalTasks = count($tasks);
         $completedTasks = count(array_filter($tasks, fn($task) => $task['status'] === 'completed'));
 
+
+        $members = $this->memberModel->getMembersByProjectId($projectId);
+        $totalMembers = count($members);
+        
+
         $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
 
         return [
             'progress' => $progress,
             'total_tasks' => $totalTasks,
             'completed_tasks' => $completedTasks,
-            'total_members' => 0, // Placeholder, requiere un MemberModel
+            'total_members' => $totalMembers, 
             'total_files' => 0 // Placeholder, requiere un FileModel
         ];
     }

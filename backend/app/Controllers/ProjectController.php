@@ -51,6 +51,33 @@ class ProjectController
         }
     }
 
+    public function createProjectsMember()
+    {
+         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $role = $_POST['role'] ?? '';
+        $projectId = $_POST['project_id'] ?? null;
+        $email = $_POST['email'] ?? '';
+        $name = $_POST['name'] ?? '';
+
+         if (empty($email) || empty($name)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
+        }
+
+          $memberId = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
+
+        if ($memberId) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro de Proyecto creado exitosamente', 'member_Id' => $memberId], 201);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el miembro de proyecto o dashboard no encontrado.'], 500);
+        }
+
+       
+
+    }
+
     public function getProjects()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -182,7 +209,7 @@ class ProjectController
             $this->sendJsonResponse(['success' => false, 'message' => 'ID de proyecto requerido.'], 400);
         }
 
-        $members = $this->memberModel->getMembersByProjectIdAiWeekend((int)$projectId);
+        $members = $this->memberModel->getMembersByProjectId((int)$projectId);
 
         $this->sendJsonResponse(['success' => true, 'members' => $members], 200);
     }

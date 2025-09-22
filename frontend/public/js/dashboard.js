@@ -2,10 +2,10 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
 const slug = new URLSearchParams(window.location.search).get('slug');
 console.log("Slug recibido:", slug);
 
-//if (!slug) {
-//  alert("Falta el slug del dashboard");
-//  location.href = "blank.html";
-//}
+if (!slug) {
+ alert("Falta el slug del dashboard");
+ location.href = "blank";
+}
 
 // Función para eliminar dashboard
 function eliminarDashboard() {
@@ -207,6 +207,60 @@ document.getElementById('projectForm').addEventListener('submit', function (e) {
     alert('Error al crear el proyecto');
   });
 });
+
+
+// Event listener para el formulario de agregar miembro
+      const memberForm = document.getElementById('memberForm');
+      if (memberForm) {
+        memberForm.addEventListener('submit', createMember);
+      }
+
+function createMember(event) {
+
+     alert('Aún no implementado'); // mr 22-09-2025
+  
+//       event.preventDefault();
+   
+//       const formData = new FormData(event.target);
+//       formData.append('project_id', 0);
+//       formData.append('role', 'member'); // en duro por ahora
+     
+//       // Validar campos requeridos
+//       const mail = formData.get('email').trim();
+  
+//       const name = formData.get('name').trim();
+   
+
+//       if (!mail || !name) {
+//         alert('Por favor completa todos los campos requeridos');
+//         return;
+//       }
+      
+    
+//  fetch(`${API_BASE}project/createProjectMember`, {
+//         method: 'POST',
+//         body: formData
+//       })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.success) {
+//           alert('Miembro creado correctamente');
+//           hidecreateMemberModal();
+//           loadMembers(); // Recargar la lista de miembros
+//           updateProjectStats(); // Actualizar estadísticas
+//         } else {
+//           alert('Error: ' + data.message);
+//         }
+//       })
+//       .catch(error => {
+//         console.error('Error:', error);
+//         alert('Error al crear el miembro ');
+//       });
+
+
+    }
+
+
 
 function eliminarProyecto(id) {
   if (!confirm("¿Eliminar este proyecto?")) return;

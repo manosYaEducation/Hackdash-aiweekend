@@ -53,6 +53,14 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
       if (taskForm) {
         taskForm.addEventListener('submit', createTask);
       }
+
+
+ // Event listener para el formulario de agregar miembro
+      const memberForm = document.getElementById('memberForm');
+      if (memberForm) {
+        memberForm.addEventListener('submit', createProjectMember);
+      }
+
     
       // Cerrar modal al hacer clic fuera
       const createTaskModal = document.getElementById('createTaskModal');
@@ -131,9 +139,9 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
             
             // Cargar contenido de las pestañas
             loadTasks();
-            loadFiles();
+            //loadFiles();
             loadMembers();
-            loadActivity();
+           // loadActivity();
           } else {
             alert('Error al cargar el proyecto');
             goBack();
@@ -152,11 +160,13 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            document.getElementById('progressValue').textContent = `${data.stats.progress}%`;
-            document.querySelector('.progress-fill').style.width = `${data.stats.progress}%`;
-            document.getElementById('tasksValue').textContent = `${data.stats.completed_tasks}/${data.stats.total_tasks}`;
-            document.getElementById('membersValue').textContent = data.stats.total_members;
-            document.getElementById('filesValue').textContent = data.stats.total_files;
+         //   document.getElementById('progressValue').textContent = `${data.stats.progress}%`;
+        //    document.querySelector('.progress-fill').style.width = `${data.stats.progress}%`;
+        //    document.getElementById('tasksValue').textContent = `${data.stats.completed_tasks}/${data.stats.total_tasks}`;
+           document.getElementById('tasksValue').textContent = `${data.stats.total_tasks}`;
+              
+        document.getElementById('membersValue').textContent = data.stats.total_members;
+          //  document.getElementById('filesValue').textContent = data.stats.total_files;
           }
         })
         .catch(error => {
@@ -429,7 +439,7 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
 
   function hidecreateMemberModal() {
       document.getElementById('createMemberModal').style.display = 'none';
-      document.getElementById('taskForm').reset();
+      document.getElementById('memberForm').reset();
     }
     
     
@@ -439,10 +449,54 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
     
     function showInviteMemberModal() {
       document.getElementById('createMemberModal').style.display = 'block';
-      // // Establecer fecha mínima como hoy
-      // const today = new Date().toISOString().split('T')[0];
-      // document.getElementById('taskDueDate').min = today;
+  
     }
+
+  function createProjectMember(event) {
+      event.preventDefault();
+   
+      const formData = new FormData(event.target);
+      formData.append('project_id', currentProjectId);
+      formData.append('role', 'member'); // en duro por ahora
+     
+      // Validar campos requeridos
+      const mail = formData.get('email').trim();
+  
+      const name = formData.get('name').trim();
+   
+
+      if (!mail || !name) {
+        alert('Por favor completa todos los campos requeridos');
+        return;
+      }
+//  alert(currentProjectId);
+      
+//         alert(formData.response);
+      
+ fetch(`${API_BASE}project/createProjectMember`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Miembro creado correctamente');
+          hidecreateMemberModal();
+          loadMembers(); // Recargar la lista de miembros
+          updateProjectStats(); // Actualizar estadísticas
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al crear el miembro ');
+      });
+
+
+    }
+
+
     
     function createTask(event) {
       event.preventDefault();

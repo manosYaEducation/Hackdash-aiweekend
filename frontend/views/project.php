@@ -254,29 +254,29 @@
   <div id="createMemberModal" class="modal">
     <div class="modal-content">
       <h2>Invitar Miembros</h2>
-      <form id="taskForm">
+      <form id="memberForm">
         <div class="form-group">
            <div class="form-group">
-          <label for="mail">Correo</label>
-          <input type="text" id="mail" name="assigned_to" placeholder="Correo">
+          <label for="email">Correo</label>
+          <input type="text" id="email" name="email" placeholder="Correo">
         </div>
-          <label for="nombre">Nombre Persona</label>
-          <input type="text" id="nombre" name="nombre" placeholder="Weekener Soñado" required>
+          <label for="name">Nombre Persona</label>
+          <input type="text" id="name" name="name" placeholder="Weekener Soñado" required>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="RolDescription">Rol y Descripción</label>
-          <textarea id="taskDescription" name="description" placeholder="Ej:Diseñador Front End -  Diseñar wireframes y curatoria de diseño" required></textarea>
+          <textarea id="RolDescription" name="Roldescription" placeholder="Ej:Diseñador Front End -  Diseñar wireframes y curatoria de diseño" required></textarea>
         </div>
-        <div class="form-group">
-         <label for="memberStatus">Estado</label>
-          <select id="memberStatus" name="status" required>
+        <div class="form-group"> -->
+         <!-- <label for="memberStatus">Estado</label> -->
+          <!-- <select id="memberStatus" name="status" required>
             <option value="assigned_admin" selected>Asignado por Admin</option>
             <option value="pending" >Solicitud de participación</option>
             <option value="invited_founder">Invitado por el Founder</option>
             <option value="confirmed">Confirmado</option>
             <option value="rejected">Rechazado</option>
             <option value="removed">Removido</option>
-          </select>
+          </select> -->
        
         <!-- <div class="form-group">
           <label for="taskDueDate">Fecha de vencimiento</label>

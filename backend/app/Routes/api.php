@@ -25,6 +25,7 @@ return [
     'project/members' => ['controller' => ProjectController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
     'project/tasks' => ['controller' => ProjectController::class, 'method' => 'getTasks', 'httpMethod' => 'GET'],
     'project/activity' => ['controller' => ProjectController::class, 'method' => 'getActivity', 'httpMethod' => 'GET'],
+    'project/createProjectMember' => ['controller' => ProjectController::class, 'method' => 'createProjectsMember', 'httpMethod' => 'POST'],
 
     // Rutas para Tareas
     'task/create' => ['controller' => TaskController::class, 'method' => 'create', 'httpMethod' => 'POST'],
@@ -37,4 +38,5 @@ return [
     //Rutas para miembros
 
       'members/getAll' => ['controller' => MemberController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
+      'members/createMember' => ['controller' => MemberController::class, 'method' => 'createMember', 'httpMethod' => 'POST'],
 ];

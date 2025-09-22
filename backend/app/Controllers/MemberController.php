@@ -19,38 +19,40 @@ class MemberController
         $this->memberModel = new MemberModel();
     }
 
-    public function create()
+    public function createMember()
     {
-        // // Asegurarse de que solo se acepten POST requests
-        // if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        // }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
 
-        // $title = $_POST['title'] ?? '';
-        // $description = $_POST['description'] ?? '';
-        // $color = $_POST['color'] ?? 'blue';
-        // $created_by = $_POST['created_by'] ?? '';
+        $role = $_POST['role'] ?? '';
+       // $projectId = $_POST['project_id'] ?? 0;
+        $email = $_POST['email'] ?? '';
+        $name = $_POST['name'] ?? '';
 
-        // if (empty($title) || empty($description)) {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Título y descripción son requeridos'], 400);
-        // }
 
-        // $validColors = ['blue', 'green', 'purple', 'red', 'orange', 'yellow', 'pink', 'indigo'];
-        // if (!in_array($color, $validColors)) {
-        //     $color = 'blue';
-        // }
+        $projectId = $_POST['project_id'] ?? null;
 
-        // $slug = $this->dashboardModel->createDashboard($title, $description, $color, $created_by);
+        // Normalizamos: '' => null
+        if ($projectId === '' || $projectId === 'null') {
+            $projectId = null;
+        } else {
+            $projectId = (int)$projectId;
+        }
 
-        // if ($slug) {
-        //     $this->sendJsonResponse([
-        //         'success' => true,
-        //         'message' => 'Dashboard creado exitosamente',
-        //         'slug' => $slug
-        //     ], 201);
-        // } else {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el dashboard'], 500);
-        // }
+
+         if (empty($email) || empty($name)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
+        }
+
+          $memberId = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
+
+        if ($memberId) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro de Proyecto creado exitosamente', 'member_Id' => $memberId], 201);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el miembro de proyecto o dashboard no encontrado.'], 500);
+        }
+
     }
 //este se usa en cuando se buscan todos
     public function getMembers()

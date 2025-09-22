@@ -15,6 +15,32 @@ class MemberModel
     }
 
 
+ 
+    public function addProjectMember(
+    ?int $projectId,
+    string $name,
+    string $email,
+    string $role = 'member'
+): ?int {
+    $names = preg_split('/\s+/', trim($name));
+    $initials = strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
+
+    $stmt = $this->conn->prepare("
+        INSERT INTO project_members (project_id, user_name, email, role, avatar_initials) 
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+    if ($stmt->execute([$projectId, $name, $email, $role, $initials])) {
+        return (int) $this->conn->lastInsertId();
+    }
+
+    return null;
+}
+
+
+  
+
+    
     
     public function getAllMembers(): array
     {
@@ -22,31 +48,10 @@ class MemberModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-//este se usa cuando se muestran los dashboard
-    public function getMembersByProjectId(int $projectId): array
-    {
-        // For now, return dummy data. In a real application, you would join with a users table
-        // and potentially a project_members pivot table.
-        return [
-            ['id' => 1, 'user_name' => 'Mauro  Rojas', 'email' => 'ana@example.com', 'role' => 'owner', 'avatar_initials' => 'AG'],
-            ['id' => 2, 'user_name' => 'Yeron Paredes', 'email' => 'carlos@example.com', 'role' => 'admin', 'avatar_initials' => 'CL'],
-            ['id' => 3, 'user_name' => 'Camila Suarez', 'email' => 'maria@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-        ];
-    }
     // los que se muestran en proyectos
-     public function getMembersByProjectIdAiWeekend(int $projectId): array
+     public function getMembersByProjectId(int $projectId): array
     {
-        // For now, return dummy data. In a real application, you would join with a users table
-        // and potentially a project_members pivot table.
-        // return [
-        //     ['id' => 1, 'user_name' => 'Emi  Panelli', 'email' => 'ana@example.com', 'role' => 'owner', 'avatar_initials' => 'AG'],
-        //     ['id' => 2, 'user_name' => 'Flora', 'email' => 'carlos@example.com', 'role' => 'admin', 'avatar_initials' => 'CL'],
-        //     ['id' => 3, 'user_name' => 'Ale Bacic', 'email' => 'ale@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-        //     ['id' => 4, 'user_name' => 'Mauro Rojas', 'email' => 'Mauro@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-        //     ['id' => 5, 'user_name' => 'Juli', 'email' => 'Juli@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-    
-        // ];
+       
 
         $stmt = $this->conn->prepare("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE  project_id = ?  ORDER BY joined_at DESC ");
         $stmt->execute([$projectId]);
