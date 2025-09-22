@@ -10,7 +10,7 @@
       <!-- Project Detail Section -->
       <section id="project-detail" class="form-section">
         <div class="form-container">
-          <h2 class="form-title">Cargando Detalles del Proyecto...</h2>
+          <h2 class="form-title project-detail-title"></h2>
           <div class="project-detail-content" id="projectDetailContent">
             <!-- Project details will be loaded here via JavaScript -->
           </div>
@@ -19,6 +19,6 @@
 
     <?php require_once("components/nav.php"); ?>
 
-    <script src="public/css/user-view.js"></script>
+    <script src="public/js/user-view.js"></script>
 </body>
 </html>
