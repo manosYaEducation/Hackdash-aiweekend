@@ -75,7 +75,7 @@
             logoutButton.addEventListener("click", function() {
                 // Limpiar el localStorage y redirigir al login
                 localStorage.clear();
-                window.location.href = "login.php";
+                window.location.href = "login";
             });
         });
     </script>
