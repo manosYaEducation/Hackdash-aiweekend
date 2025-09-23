@@ -21,7 +21,14 @@
 
             <div class="profile-name-section">
                 <label for="profileName" class="profile-label">Nombre del perfil</label>
-                <input type="text" id="profileName" class="profile-input" value="Example...">
+                <!-- Aquí cargamos el nombre del usuario desde el localStorage -->
+                <input type="text" id="profileName" class="profile-input" value="" readonly>
+            </div>
+
+            <div class="profile-email-section">
+                <label for="profileEmail" class="profile-label">Correo electrónico</label>
+                <!-- Aquí cargamos el correo del usuario desde el localStorage -->
+                <input type="email" id="profileEmail" class="profile-input" value="" readonly>
             </div>
 
             <div class="profile-actions">
@@ -29,13 +36,48 @@
                 <button class="submit-button">Guardar</button>
             </div>
             <div class="disconnect-section">
-                <button class="submit-button">Desconectar</button>
+                <button class="submit-button" id="logoutButton">Desconectar</button>
             </div>
         </main>
 
-        <?php require_once("components/nav.php"); ?>
+        
+        <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="home" class="bottom-nav-item">
+            <div class="nav-icon">🏠</div>
+            <span>Inicio</span>
+        </a>
+        <a href="project-list" class="bottom-nav-item active">
+            <div class="nav-icon">📋</div>
+            <span>Proyectos</span>
+        </a>
+        <a href="user-login" class="bottom-nav-item">
+            <div class="nav-icon">👤</div>
+            <span>Cuenta</span>
+        </a>
+    </nav>
     </div>
 
     <script src="public/css/user-view.js"></script>
+    <script>
+        // Verificar si el usuario está logueado
+        window.addEventListener("load", function() {
+            // Obtener la información del usuario desde localStorage
+            const userLoggedIn = localStorage.getItem("userLoggedIn");
+            const username = localStorage.getItem("userName");
+            const userEmail = localStorage.getItem("userEmail");
+
+            document.getElementById("profileName").value = username;
+            document.getElementById("profileEmail").value = userEmail;
+
+            // Lógica para desconectar al usuario
+            const logoutButton = document.getElementById("logoutButton");
+            logoutButton.addEventListener("click", function() {
+                // Limpiar el localStorage y redirigir al login
+                localStorage.clear();
+                window.location.href = "login.php";
+            });
+        });
+    </script>
 </body>
 </html>
