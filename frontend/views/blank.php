@@ -11,6 +11,7 @@
 </head>
 
 <body>
+
   <header>
     <div class="header-content">
       <div class="header-left">
@@ -207,6 +208,7 @@
     </div>
   </div>
 
+  <script src="public/js/restrict_admin.js"></script>
   <script src="public/js/dashboard-crud.js"></script>
   <script src="public/js/verifylogin.js"></script>
   <script src="public/js/blank-ui.js"></script>

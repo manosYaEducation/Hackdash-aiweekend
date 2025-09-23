@@ -292,7 +292,7 @@
 
 
 
-  
+  <script src="public/js/restrict_admin.js"></script>
   <script src="public/js/verifylogin.js"></script>
   <script src="public/js/project-ui.js"></script>
 </body>
