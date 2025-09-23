@@ -23,6 +23,9 @@ return [
     'project/stats' => ['controller' => ProjectController::class, 'method' => 'getStats', 'httpMethod' => 'GET'],
     'project/files' => ['controller' => ProjectController::class, 'method' => 'getFiles', 'httpMethod' => 'GET'],
     'project/members' => ['controller' => ProjectController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
+    'project/member-projects' => ['controller' => ProjectController::class, 'method' => 'getProjectsByMember', 'httpMethod' => 'GET'],
+    'project/join' => ['controller' => ProjectController::class, 'method' => 'addMember', 'httpMethod' => 'POST'],
+    'project/leave' => ['controller' => ProjectController::class, 'method' => 'removeMember', 'httpMethod' => 'POST'],
     'project/tasks' => ['controller' => ProjectController::class, 'method' => 'getTasks', 'httpMethod' => 'GET'],
     'project/activity' => ['controller' => ProjectController::class, 'method' => 'getActivity', 'httpMethod' => 'GET'],
 

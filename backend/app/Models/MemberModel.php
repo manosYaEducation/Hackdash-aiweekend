@@ -14,30 +14,49 @@ class MemberModel
         $this->conn = Database::getInstance()->getConnection();
     }
 
+    public function addMemberToProject(int $projectId, string $userName, string $email, string $role = 'member'): bool
+    {
+        // Validar el rol
+        $validRoles = ['owner', 'admin', 'member'];
+        if (!in_array($role, $validRoles)) {
+            $role = 'member';
+        }
 
-//este se usa cuando se muestran los dashboard
+        // Generar iniciales para el avatar
+        $avatarInitials = $this->generateAvatarInitials($userName);
+
+        // Preparar la consulta para insertar el nuevo miembro
+        $stmt = $this->conn->prepare("INSERT INTO project_members (project_id, user_name, email, role, avatar_initials) VALUES (?, ?, ?, ?, ?)");
+        return $stmt->execute([$projectId, $userName, $email, $role, $avatarInitials]);
+    }
+
+    private function generateAvatarInitials(string $userName): string
+    {
+        $words = explode(' ', trim($userName));
+        $initials = '';
+        foreach ($words as $word) {
+            if (!empty($word)) {
+                $initials .= strtoupper($word[0]);
+                if (strlen($initials) >= 2) {
+                    break;
+                }
+            }
+        }
+        return $initials ?: 'UN';
+    }
+
     public function getMembersByProjectId(int $projectId): array
     {
-        // For now, return dummy data. In a real application, you would join with a users table
-        // and potentially a project_members pivot table.
-        return [
-            ['id' => 1, 'user_name' => 'Mauro  Rojas', 'email' => 'ana@example.com', 'role' => 'owner', 'avatar_initials' => 'AG'],
-            ['id' => 2, 'user_name' => 'Yeron Paredes', 'email' => 'carlos@example.com', 'role' => 'admin', 'avatar_initials' => 'CL'],
-            ['id' => 3, 'user_name' => 'Camila Suarez', 'email' => 'maria@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-        ];
+        $stmt = $this->conn->prepare("SELECT id, user_name, email, role, avatar_initials FROM project_members WHERE project_id = ?");
+        $stmt->execute([$projectId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    // los que se muestran en proyectos
-     public function getMembersByProjectIdAiWeekend(int $projectId): array
+
+    // Alias removed; use getMembersByProjectId directly
+
+    public function removeMemberFromProject(int $projectId, string $email): bool
     {
-        // For now, return dummy data. In a real application, you would join with a users table
-        // and potentially a project_members pivot table.
-        return [
-            ['id' => 1, 'user_name' => 'Emi  Panelli', 'email' => 'ana@example.com', 'role' => 'owner', 'avatar_initials' => 'AG'],
-            ['id' => 2, 'user_name' => 'Flora', 'email' => 'carlos@example.com', 'role' => 'admin', 'avatar_initials' => 'CL'],
-            ['id' => 3, 'user_name' => 'Ale Bacic', 'email' => 'ale@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-            ['id' => 4, 'user_name' => 'Mauro Rojas', 'email' => 'Mauro@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-            ['id' => 5, 'user_name' => 'Juli', 'email' => 'Juli@example.com', 'role' => 'member', 'avatar_initials' => 'MR'],
-    
-        ];
+        $stmt = $this->conn->prepare("DELETE FROM project_members WHERE project_id = ? AND email = ?");
+        return $stmt->execute([$projectId, $email]);
     }
 }
