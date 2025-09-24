@@ -22,6 +22,42 @@ class ProjectController
         $this->memberModel = new MemberModel();
     }
 
+    public function addMember()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $projectId = $_POST['project_id'] ?? null;
+        $userName = $_POST['user_name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $role = $_POST['role'] ?? 'member';
+
+        if (empty($projectId) || empty($userName) || empty($email)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID del proyecto, nombre de usuario y correo electrónico son requeridos'], 400);
+        }
+
+        // Verificar si el proyecto existe
+        $project = $this->projectModel->getProjectById((int)$projectId);
+        if (!$project) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Proyecto no encontrado'], 404);
+        }
+
+        // Verificar si el correo ya está registrado en el proyecto
+        $existingMembers = $this->memberModel->getMembersByProjectId((int)$projectId);
+        foreach ($existingMembers as $member) {
+            if ($member['email'] === $email) {
+                $this->sendJsonResponse(['success' => false, 'message' => 'El correo ya está registrado en este proyecto'], 400);
+            }
+        }
+
+        if ($this->memberModel->addMemberToProject((int)$projectId, $userName, $email, $role)) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro agregado exitosamente'], 201);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al agregar el miembro'], 500);
+        }
+    }
+
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -193,7 +229,6 @@ class ProjectController
 
     public function getFiles()
     {
-        // This will require a FileModel later
         $this->sendJsonResponse(['success' => true, 'files' => []], 200);
     }
 
@@ -208,15 +243,53 @@ class ProjectController
             $this->sendJsonResponse(['success' => false, 'message' => 'ID de proyecto requerido.'], 400);
         }
 
-        $members = $this->memberModel->getMembersByProjectIdAiWeekend((int)$projectId);
+        $members = $this->memberModel->getMembersByProjectId((int)$projectId);
 
         $this->sendJsonResponse(['success' => true, 'members' => $members], 200);
     }
 
     public function getActivity()
     {
-        // This will require an ActivityModel later
         $this->sendJsonResponse(['success' => true, 'activity' => []], 200);
+    }
+
+    public function removeMember()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $projectId = $_POST['project_id'] ?? null;
+        $email = $_POST['email'] ?? '';
+
+        if (empty($projectId) || empty($email)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID del proyecto y correo electrónico son requeridos'], 400);
+        }
+
+        // Verificar si el proyecto existe
+        $project = $this->projectModel->getProjectById((int)$projectId);
+        if (!$project) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Proyecto no encontrado'], 404);
+        }
+
+        // Verificar si el miembro existe
+        $existingMembers = $this->memberModel->getMembersByProjectId((int)$projectId);
+        $exists = false;
+        foreach ($existingMembers as $member) {
+            if ($member['email'] === $email) {
+                $exists = true;
+                break;
+            }
+        }
+        if (!$exists) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'El usuario no es miembro del proyecto'], 400);
+        }
+
+        if ($this->memberModel->removeMemberFromProject((int)$projectId, $email)) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Has abandonado el proyecto'], 200);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al abandonar el proyecto'], 500);
+        }
     }
 
     private function sendJsonResponse($data, $statusCode = 200)
