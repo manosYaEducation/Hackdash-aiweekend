@@ -44,56 +44,80 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // File input handling
-  const fileInput = document.getElementById("attachment")
-  const fileInputText = document.querySelector(".file-input-text")
-
-  if (fileInput && fileInputText) {
-    fileInput.addEventListener("change", function () {
-      if (this.files && this.files.length > 0) {
-        fileInputText.textContent = `Archivo seleccionado: ${this.files[0].name}`
-      } else {
-        fileInputText.textContent = "Examinar... Ningún archivo seleccionado."
-      }
-    })
-  }
-
   // Form submission
   const capitalsForm = document.getElementById("capitalsForm")
   if (capitalsForm) {
-    capitalsForm.addEventListener("submit", function (e) {
+    capitalsForm.addEventListener("submit", async function (e) {
       e.preventDefault()
 
       // Get form data
       const formData = new FormData(this)
-      const data = Object.fromEntries(formData)
+      formData.append('slug', currentSlug)
+      formData.append('status', 'in_progress')
 
       // Simple validation
-      if (!data.projectName || !data.teamSize || !data.description) {
+      if (!formData.get('title') || !formData.get('description')) {
         alert("Por favor, completa todos los campos requeridos.")
         return
       }
 
-      // Simulate form submission
-      const submitButton = this.querySelector(".submit-button")
+      // Submit to API
+      const submitButton = this.querySelector("[type='submit']")
       const originalText = submitButton.textContent
 
       submitButton.textContent = "Enviando..."
       submitButton.disabled = true
 
-      setTimeout(() => {
-        alert("¡Formulario enviado exitosamente!")
+      try {
+        const response = await fetch(`${API_BASE}project/create`, {
+          method: 'POST',
+          body: formData
+        })
+        const data = await response.json()
+
+        if (data.success) {
+          alert("¡Proyecto creado exitosamente!")
+          this.reset()
+        } else {
+          alert(data.message || "Error al crear el proyecto.")
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        alert("Error de conexión. Inténtalo de nuevo.")
+      } finally {
         submitButton.textContent = originalText
         submitButton.disabled = false
-        this.reset()
-        if (fileInputText) {
-          fileInputText.textContent = "Examinar... Ningún archivo seleccionado."
-        }
-      }, 2000)
+      }
     })
   }
 
-  // CTA Button functionality
+  // Cancel button
+  const cancelButton = document.getElementById("cancelButton")
+  if (cancelButton) {
+    cancelButton.addEventListener("click", () => {
+      capitalsForm.reset()
+      window.history.back()
+    })
+  }
+
+  // Preview button
+  const previewButton = document.getElementById("previewButton")
+  if (previewButton) {
+    previewButton.addEventListener("click", () => {
+      const title = document.getElementById("title").value
+      const description = document.getElementById("description").value
+      const pitch = document.getElementById("pitch").files[0]?.name || "Ningún pitch seleccionado"
+      const image = document.getElementById("image").files[0]?.name || "Ninguna imagen seleccionada"
+
+      if (!title || !description) {
+        alert("Por favor, completa título y descripción para vista previa.")
+        return
+      }
+
+      alert(`Vista previa del proyecto:\n\nTítulo: ${title}\nDescripción: ${description}\nPitch: ${pitch}\nImagen: ${image}`)
+    })
+  }
+
   const ctaButtons = document.querySelectorAll(".cta-button")
   ctaButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
@@ -125,8 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         this.textContent = originalText
         this.disabled = false
-        // Here you would typically navigate to the project detail page
-        alert("¡Proyecto seleccionado! Redirigiendo...")
       }, 1500)
     })
   })

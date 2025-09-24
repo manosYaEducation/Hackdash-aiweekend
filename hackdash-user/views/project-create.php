@@ -15,23 +15,23 @@
             <form class="capitals-form" id="capitalsForm">
                 <div class="form-group">
                     <label for="title">Titulo</label>
-                    <input type="text" id="title" name="title" placeholder="Ingresa tu correo" required>
+                    <input type="text" id="title" name="title" placeholder="Ingresa el título del proyecto" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Descripción</label>
-                    <input type="text" id="description" name="description" placeholder="Ingresa tu correo" required>
+                    <input type="text" id="description" name="description" placeholder="Ingresa la descripción" required>
                 </div>
                 <div class="form-group">
                     <label for="pitch">Subir pitch</label>
-                    <input type="file" id="pitch" name="pitch" placeholder="Ingresa tu correo" required>
+                    <input type="file" id="pitch" name="pitch">
                 </div>
                 <div class="form-group">
                     <label for="image">Subir imagen</label>
-                    <input type="file" id="image" name="image" placeholder="Ingresa tu correo" required>
+                    <input type="file" id="image" name="image">
                 </div>
                 <div>
-                    <button type="submit" class="submit-button">Cancelar</button>
-                    <button type="submit" class="submit-button">Vista previa</button>
+                    <button type="button" class="submit-button" id="cancelButton">Cancelar</button>
+                    <button type="button" class="submit-button" id="previewButton">Vista previa</button>
                     <button type="submit" class="submit-button">Crear proyecto</button>
                 </div>
             </form>
