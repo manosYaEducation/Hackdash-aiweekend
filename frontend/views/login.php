@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/helpers.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,16 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
-    <link rel="stylesheet" href="public/css/auth/login.css">
+    <link rel="stylesheet" href="<?php echo getPublicUrl('css/auth/login.css'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <link rel="icon" href="/assets/img/letra-k (1).png" type="image/x-icon">
+    <link rel="icon" href="<?php echo getAssetUrl('kreativenofondo.png'); ?>" type="image/x-icon">
 </head>
 
 <body>
     <div class="login-container">
         <div class="login-logo">
-            <img src="/assets/kreativenofondo.png" alt="Logo" class="avatar">
+            <img src="<?php echo getAssetUrl('kreativenofondo.png'); ?>" alt="Logo" class="avatar">
         </div>
 
         <h1>Iniciar sesión</h1>
@@ -49,10 +50,10 @@
         </form>
     </div>
     <div id="back-to-top" class="back-to-top">
-        <a href="index.php" class="arrow">←</a>
+        <a href="<?php echo getFrontendUrl(); ?>/" class="arrow">←</a>
     </div>
-    <script src="public/js/config.js"></script>
-    <script src="public/js/login.js"></script>
+    <script src="<?php echo getPublicUrl('js/config.js'); ?>"></script>
+    <script src="<?php echo getPublicUrl('js/login.js'); ?>"></script>
 </body>
 
 </html>

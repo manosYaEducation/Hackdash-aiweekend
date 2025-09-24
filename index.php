@@ -1,16 +1,19 @@
 <?php
 // index.php
 
+// Leer configuración desde config.ini
+$config = parse_ini_file(__DIR__ . "/config.ini", true);
+
 // Detecta el esquema (http o https)
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
 
 // Detecta el host (ej: localhost, 127.0.0.1, midominio.com)
 $host = $_SERVER['HTTP_HOST'];
 
-// Define la ruta base relativa al host , cambiar a .INI o .ENV
-$frontPath = '/github/Hackdash-aiweekend/frontend/';
+// Obtener la ruta base desde config.ini
+$frontPath = $config['paths']['frontend'] . '/';
 
-// Construye la URL absoluta
+// Construye la URL absoluta usando configuración
 $url = $scheme . '://' . $host . $frontPath;
 
 // Redirección con cabeceras seguras

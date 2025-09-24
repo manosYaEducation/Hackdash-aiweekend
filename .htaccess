@@ -1,0 +1,20 @@
+Options -MultiViews
+RewriteEngine On
+
+# Redirect root to frontend
+RewriteCond %{REQUEST_URI} ^/hackdash-aiweekend/?$
+RewriteRule ^(.*)$ /hackdash-aiweekend/frontend/ [R=302,L]
+
+# Handle frontend routes
+RewriteCond %{REQUEST_URI} ^/hackdash-aiweekend/frontend/(.*)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^hackdash-aiweekend/frontend/(.*)$ /hackdash-aiweekend/frontend/index.php [QSA,L]
+
+# Handle backend routes
+RewriteCond %{REQUEST_URI} ^/hackdash-aiweekend/backend/(.*)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^hackdash-aiweekend/backend/(.*)$ /hackdash-aiweekend/backend/public/index.php [QSA,L]
+
+

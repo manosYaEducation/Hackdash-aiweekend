@@ -32,4 +32,7 @@ return [
     'task/update' => ['controller' => TaskController::class, 'method' => 'update', 'httpMethod' => 'POST'],
     'task/delete' => ['controller' => TaskController::class, 'method' => 'delete', 'httpMethod' => 'POST'],
     'task/updateStatus' => ['controller' => TaskController::class, 'method' => 'updateStatus', 'httpMethod' => 'POST'],
+    
+    // Ruta para configuración
+    'config' => ['controller' => 'ConfigController', 'method' => 'getConfig', 'httpMethod' => 'GET'],
 ];

@@ -26,7 +26,12 @@ class Router
         $route = trim($route, '/');
 
         // Special handling for the default index route
-        if ($route === 'index.php') {
+        if ($route === 'index.php' || $route === '') {
+            $route = 'index';
+        }
+
+        // Handle trailing slashes - remove them for route matching
+        if (empty($route)) {
             $route = 'index';
         }
 

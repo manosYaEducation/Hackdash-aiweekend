@@ -64,8 +64,9 @@ loginF.addEventListener("submit", async (event) => {
   }
 
   try {
-    // Aquí cambiamos la URL del endpoint a la nueva dirección
-    const response = await fetch("https://systemauth.alphadocere.cl/login.php", {
+    // Usar configuración dinámica para la URL del endpoint
+    const authUrl = window.API_URL_PHP ? window.API_URL_PHP + '/api/login' : "https://systemauth.alphadocere.cl/login.php";
+    const response = await fetch(authUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
