@@ -14,49 +14,60 @@ class MemberModel
         $this->conn = Database::getInstance()->getConnection();
     }
 
-    public function addMemberToProject(int $projectId, string $userName, string $email, string $role = 'member'): bool
-    {
-        // Validar el rol
-        $validRoles = ['owner', 'admin', 'member'];
-        if (!in_array($role, $validRoles)) {
-            $role = 'member';
-        }
 
-        // Generar iniciales para el avatar
-        $avatarInitials = $this->generateAvatarInitials($userName);
+ 
+    public function addProjectMember(
+    ?int $projectId,
+    string $name,
+    string $email,
+    string $role = 'member'
+): ?int {
+    $names = preg_split('/\s+/', trim($name));
+    $initials = strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
 
-        // Preparar la consulta para insertar el nuevo miembro
-        $stmt = $this->conn->prepare("INSERT INTO project_members (project_id, user_name, email, role, avatar_initials) VALUES (?, ?, ?, ?, ?)");
-        return $stmt->execute([$projectId, $userName, $email, $role, $avatarInitials]);
+    $stmt = $this->conn->prepare("
+        INSERT INTO project_members (project_id, user_name, email, role, avatar_initials) 
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+    if ($stmt->execute([$projectId, $name, $email, $role, $initials])) {
+        return (int) $this->conn->lastInsertId();
     }
 
-    private function generateAvatarInitials(string $userName): string
-    {
-        $words = explode(' ', trim($userName));
-        $initials = '';
-        foreach ($words as $word) {
-            if (!empty($word)) {
-                $initials .= strtoupper($word[0]);
-                if (strlen($initials) >= 2) {
-                    break;
-                }
-            }
-        }
-        return $initials ?: 'UN';
-    }
+    return null;
+}
 
-    public function getMembersByProjectId(int $projectId): array
+
+  
+
+    
+    
+    public function getAllMembers(): array
     {
-        $stmt = $this->conn->prepare("SELECT id, user_name, email, role, avatar_initials FROM project_members WHERE project_id = ?");
-        $stmt->execute([$projectId]);
+        $stmt = $this->conn->query("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Alias removed; use getMembersByProjectId directly
-
-    public function removeMemberFromProject(int $projectId, string $email): bool
+    // los que se muestran en proyectos
+     public function getMembersByProjectId(int $projectId): array
     {
-        $stmt = $this->conn->prepare("DELETE FROM project_members WHERE project_id = ? AND email = ?");
-        return $stmt->execute([$projectId, $email]);
+       
+
+        $stmt = $this->conn->prepare("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE  project_id = ?  ORDER BY joined_at DESC ");
+        $stmt->execute([$projectId]);
+        $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $members ?: null;
+
+
+        $stmt = $this->conn->query("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+     public function getProjectById(int $projectId): ?array
+    {
+        $stmt = $this->conn->prepare("SELECT p.*, d.slug as dashboard_slug FROM projects p JOIN dashboards d ON p.dashboard_id = d.id WHERE p.id = ?");
+        $stmt->execute([$projectId]);
+        $project = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $project ?: null;
     }
 }

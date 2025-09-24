@@ -52,21 +52,6 @@ function mostrarMensajeLogin(mensaje) {
   }
 }
 
-// Función de ayuda para verificar roles
-function hasRole(roleName) {
-  const storedRoles = localStorage.getItem("roles");
-  if (!storedRoles) {
-    return false;
-  }
-  try {
-    const roles = JSON.parse(storedRoles);
-    return roles.some(role => role.nombre_rol === roleName);
-  } catch (e) {
-    console.error("Error parsing roles from localStorage:", e);
-    return false;
-  }
-}
-
 loginF.addEventListener("submit", async (event) => {
   event.preventDefault();
   const username = document.querySelector("#username").value;
@@ -79,8 +64,8 @@ loginF.addEventListener("submit", async (event) => {
   }
 
   try {
-    // Antes de subir a producción https://systemauth.alphadocere.cl/login.php o a https://test-systemauth.alphadocere.cl/login.php
-    const response = await fetch('https://test-systemauth.alphadocere.cl/login.php', {  // endpoint local
+    // Aquí cambiamos la URL del endpoint a la nueva dirección
+    const response = await fetch("https://systemauth.alphadocere.cl/login.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,10 +102,6 @@ loginF.addEventListener("submit", async (event) => {
           localStorage.setItem("userName", result.user.nombre);
           localStorage.setItem("userCiudad", result.user.ciudad);
         }
-        // Guardar los roles asociados al usuario si están disponibles
-        if (Array.isArray(result.roles)) {
-          localStorage.setItem("roles", JSON.stringify(result.roles));
-        }
       } else {
         sessionStorage.setItem("userLoggedIn", "true");
         sessionStorage.setItem("username", username);
@@ -146,19 +127,10 @@ loginF.addEventListener("submit", async (event) => {
           sessionStorage.setItem("userCiudad", result.user.ciudad);
           localStorage.setItem("userCiudad", result.user.ciudad);
         }
-        // Guardar los roles asociados al usuario si están disponibles
-        if (Array.isArray(result.roles)) {
-          sessionStorage.setItem("roles", JSON.stringify(result.roles));
-          localStorage.setItem("roles", JSON.stringify(result.roles));
-        }
       }
 
       // Redirigir al usuario
-      if (hasRole("admin_k")) {
-        window.location.href = "blank"; 
-      } else {
-        window.location.href = "profile"; // Página por defecto si no tiene un rol específico
-      }
+      window.location.href = "blank";
     } else {
       mostrarMensajeLogin(result.error || "Usuario o contraseña incorrectos.");
 

@@ -2,14 +2,23 @@ function showCreateProjectModal() {
       document.getElementById('createProjectModal').style.display = 'flex';
     }
 
+    function showCreateProjectMemberModal() {
+      document.getElementById('createMemberModal').style.display = 'flex';
+    }
+
     function hideCreateProjectModal() {
       document.getElementById('createProjectModal').style.display = 'none';
       document.getElementById('projectForm').reset();
     }
 
-    function showInviteModal() {
-      alert('Función de invitar miembros próximamente disponible');
+       function hideCreateMemberModal() {
+      document.getElementById('createMemberModal').style.display = 'none';
+      document.getElementById('memberForm').reset();
     }
+
+    
+
+   
 
     // Cerrar modal al hacer clic fuera
     document.getElementById('createProjectModal').addEventListener('click', function(e) {
@@ -17,6 +26,19 @@ function showCreateProjectModal() {
         hideCreateProjectModal();
       }
     });
+
+       // Cerrar modal al hacer clic fuera
+    document.getElementById('createMemberModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        hideCreateMemberModal();
+      }
+    });
+
+
+
+
+
+    
 
     // Función para buscar proyectos
     document.getElementById('searchInput').addEventListener('input', function(e) {

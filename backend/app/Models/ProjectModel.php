@@ -6,18 +6,21 @@ use PDO;
 use App\Backend\Models\Database;
 use App\Backend\Models\DashboardModel;
 use App\Backend\Models\TaskModel;
+use App\Backend\Models\MemberModel;
 
 class ProjectModel
 {
     private $conn;
     private $dashboardModel;
     private $taskModel;
+    private $memberModel;
 
     public function __construct()
     {
         $this->conn = Database::getInstance()->getConnection();
         $this->dashboardModel = new DashboardModel();
         $this->taskModel = new TaskModel();
+        $this->memberModel = new MemberModel();
     }
 
     public function createProject(string $dashboardSlug, string $title, string $description, string $status): ?int
@@ -54,20 +57,6 @@ class ProjectModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAllProjectsPaginated(int $limit, int $offset): array
-    {
-        $stmt = $this->conn->prepare("SELECT p.*, d.title as dashboard_name, d.slug as dashboard_slug FROM projects p JOIN dashboards d ON p.dashboard_id = d.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?");
-        $stmt->bindParam(1, $limit, PDO::PARAM_INT);
-        $stmt->bindParam(2, $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getTotalProjectsCount(): int
-    {
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM projects");
-        return (int) $stmt->fetchColumn();
-    }
     public function updateProject(int $projectId, string $title, string $description, string $status): bool
     {
         $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ? WHERE id = ?");
@@ -86,13 +75,18 @@ class ProjectModel
         $totalTasks = count($tasks);
         $completedTasks = count(array_filter($tasks, fn($task) => $task['status'] === 'completed'));
 
+
+        $members = $this->memberModel->getMembersByProjectId($projectId);
+        $totalMembers = count($members);
+        
+
         $progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
 
         return [
             'progress' => $progress,
             'total_tasks' => $totalTasks,
             'completed_tasks' => $completedTasks,
-            'total_members' => 0, // Placeholder, requiere un MemberModel
+            'total_members' => $totalMembers, 
             'total_files' => 0 // Placeholder, requiere un FileModel
         ];
     }

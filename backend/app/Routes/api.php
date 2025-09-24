@@ -4,6 +4,7 @@ use App\Backend\Controllers\AuthController;
 use App\Backend\Controllers\DashboardController;
 use App\Backend\Controllers\ProjectController;
 use App\Backend\Controllers\TaskController;
+use App\Backend\Controllers\MemberController;
 
 return [
     'login' => ['controller' => AuthController::class, 'method' => 'login', 'httpMethod' => 'POST'],
@@ -16,18 +17,15 @@ return [
     // Rutas para Proyectos
     'project/create' => ['controller' => ProjectController::class, 'method' => 'create', 'httpMethod' => 'POST'],
     'project/getProjects' => ['controller' => ProjectController::class, 'method' => 'getProjects', 'httpMethod' => 'GET'],
-    'project/all' => ['controller' => ProjectController::class, 'method' => 'getAllProjectsPaginated', 'httpMethod' => 'GET'],
     'project/get' => ['controller' => ProjectController::class, 'method' => 'getProject', 'httpMethod' => 'GET'],
     'project/update' => ['controller' => ProjectController::class, 'method' => 'update', 'httpMethod' => 'POST'],
     'project/delete' => ['controller' => ProjectController::class, 'method' => 'delete', 'httpMethod' => 'POST'],
     'project/stats' => ['controller' => ProjectController::class, 'method' => 'getStats', 'httpMethod' => 'GET'],
     'project/files' => ['controller' => ProjectController::class, 'method' => 'getFiles', 'httpMethod' => 'GET'],
     'project/members' => ['controller' => ProjectController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
-    'project/member-projects' => ['controller' => ProjectController::class, 'method' => 'getProjectsByMember', 'httpMethod' => 'GET'],
-    'project/join' => ['controller' => ProjectController::class, 'method' => 'addMember', 'httpMethod' => 'POST'],
-    'project/leave' => ['controller' => ProjectController::class, 'method' => 'removeMember', 'httpMethod' => 'POST'],
     'project/tasks' => ['controller' => ProjectController::class, 'method' => 'getTasks', 'httpMethod' => 'GET'],
     'project/activity' => ['controller' => ProjectController::class, 'method' => 'getActivity', 'httpMethod' => 'GET'],
+    'project/createProjectMember' => ['controller' => ProjectController::class, 'method' => 'createProjectsMember', 'httpMethod' => 'POST'],
 
     // Rutas para Tareas
     'task/create' => ['controller' => TaskController::class, 'method' => 'create', 'httpMethod' => 'POST'],
@@ -36,4 +34,9 @@ return [
     'task/update' => ['controller' => TaskController::class, 'method' => 'update', 'httpMethod' => 'POST'],
     'task/delete' => ['controller' => TaskController::class, 'method' => 'delete', 'httpMethod' => 'POST'],
     'task/updateStatus' => ['controller' => TaskController::class, 'method' => 'updateStatus', 'httpMethod' => 'POST'],
+
+    //Rutas para miembros
+
+      'members/getAll' => ['controller' => MemberController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
+      'members/createMember' => ['controller' => MemberController::class, 'method' => 'createMember', 'httpMethod' => 'POST'],
 ];
