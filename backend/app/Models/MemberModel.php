@@ -37,15 +37,13 @@ class MemberModel
     return null;
 }
 
-  public function deleteMember(int $memberId): bool
+  public function deleteMember(String $memberEmail, int $projectId): bool
     {
-        $stmt = $this->conn->prepare("DELETE FROM member WHERE id = ?");
-        return $stmt->execute([$memberId]);
+        $stmt = $this->conn->prepare("DELETE FROM project_members WHERE email = ? AND project_id = ?");
+        return $stmt->execute([$memberEmail, $projectId]);
     }
   
 
-    
-    
     public function getAllMembers(): array
     {
         $stmt = $this->conn->query("SELECT `id`,`project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");

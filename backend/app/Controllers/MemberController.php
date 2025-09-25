@@ -127,13 +127,19 @@ class MemberController
             $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
         }
 
-        $memberId = $_POST['id'] ?? null;
+        $memberEmail = $_POST['email'] ?? null;
+        $projectId = $_POST['project_id'] ?? null;
 
-        if (empty($memberId)) {
-            $this->sendJsonResponse(['success' => false, 'message' => 'ID de miembro requerido para eliminar.'], 400);
+        if (empty($memberEmail)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'email requerido para eliminar.'], 400);
         }
 
-        if ($this->memberModel->deleteMember($memberId)) {
+        if (empty($projectId)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'project_id requerido para eliminar.'], 400);
+        }
+
+
+        if ($this->memberModel->deleteMember($memberEmail,$projectId)) {
             $this->sendJsonResponse(['success' => true, 'message' => 'Miembro eliminado exitosamente'], 200);
         } else {
             $this->sendJsonResponse(['success' => false, 'message' => 'Error al eliminar el miembro o no se encontró.'], 500);
