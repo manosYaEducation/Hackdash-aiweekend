@@ -54,6 +54,29 @@ class MemberController
         }
 
     }
+
+public function getProject()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+    }
+
+    // Tomar email desde query string
+    $email = $_GET['email'] ?? null;
+
+    if (!$email) {
+        $this->sendJsonResponse(['success' => false, 'message' => 'El parámetro "email" es obligatorio.'], 400);
+    }
+
+    $project = $this->memberModel->getProjectByMailMember($email);
+
+    if ($project !== null) {
+        $this->sendJsonResponse(['success' => true, 'data' => $project], 200);
+    } else {
+        $this->sendJsonResponse(['success' => false, 'message' => 'No se encontraron proyectos para este miembro.'], 404);
+    }
+}
+
 //este se usa en cuando se buscan todos
     public function getMembers()
     {

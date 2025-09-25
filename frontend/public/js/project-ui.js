@@ -639,6 +639,9 @@ const API_BASE = '/Hackdash-aiweekend/backend/public/';
         });
       }
     }
+
+
+    
     
     function showEditTaskModal() {
       document.getElementById('editTaskModal').style.display = 'block';

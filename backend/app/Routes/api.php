@@ -39,4 +39,5 @@ return [
 
       'members/getAll' => ['controller' => MemberController::class, 'method' => 'getMembers', 'httpMethod' => 'GET'],
       'members/createMember' => ['controller' => MemberController::class, 'method' => 'createMember', 'httpMethod' => 'POST'],
+      'members/projects' => ['controller' => MemberController::class, 'method' => 'getProject', 'httpMethod' => 'GET'],
 ];

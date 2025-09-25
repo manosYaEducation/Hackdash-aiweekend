@@ -70,4 +70,12 @@ class MemberModel
         $project = $stmt->fetch(PDO::FETCH_ASSOC);
         return $project ?: null;
     }
+
+     public function getProjectByMailMember(string $mailMember): ?array
+    {
+        $stmt = $this->conn->prepare("SELECT `project_id`, `email`, `role`,  `joined_at` FROM `project_members` WHERE `email` = ?  ORDER BY joined_at DESC");
+        $stmt->execute([$mailMember]);
+        $project = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $project ?: null;
+    }
 }
