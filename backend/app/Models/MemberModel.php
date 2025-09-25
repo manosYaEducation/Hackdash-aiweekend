@@ -37,14 +37,18 @@ class MemberModel
     return null;
 }
 
-
+  public function deleteMember(int $memberId): bool
+    {
+        $stmt = $this->conn->prepare("DELETE FROM member WHERE id = ?");
+        return $stmt->execute([$memberId]);
+    }
   
 
     
     
     public function getAllMembers(): array
     {
-        $stmt = $this->conn->query("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
+        $stmt = $this->conn->query("SELECT `id`,`project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -53,13 +57,13 @@ class MemberModel
     {
        
 
-        $stmt = $this->conn->prepare("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE  project_id = ?  ORDER BY joined_at DESC ");
+        $stmt = $this->conn->prepare("SELECT `id`,`project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE  project_id = ?  ORDER BY joined_at DESC ");
         $stmt->execute([$projectId]);
         $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $members ?: null;
 
 
-        $stmt = $this->conn->query("SELECT `project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
+        $stmt = $this->conn->query("SELECT `id`,`project_id`, `user_name`, `email`, `role`, `avatar_initials`, `joined_at` FROM `project_members` WHERE 1  ORDER BY joined_at DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

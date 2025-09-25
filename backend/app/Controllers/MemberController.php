@@ -122,21 +122,23 @@ class MemberController
 
     public function delete()
     {
-        // if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        // }
+            // Eliminar un miembro
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
 
-        // $slug = $_POST['slug'] ?? null;
+        $memberId = $_POST['id'] ?? null;
 
-        // if (empty($slug)) {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Slug de dashboard requerido para eliminar.'], 400);
-        // }
+        if (empty($memberId)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID de miembro requerido para eliminar.'], 400);
+        }
 
-        // if ($this->dashboardModel->deleteDashboard($slug)) {
-        //     $this->sendJsonResponse(['success' => true, 'message' => 'Dashboard eliminado exitosamente'], 200);
-        // } else {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Error al eliminar el dashboard o no se encontró.'], 500);
-        // }
+        if ($this->memberModel->deleteMember($memberId)) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro eliminado exitosamente'], 200);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al eliminar el miembro o no se encontró.'], 500);
+        }
+
     }
 
     private function sendJsonResponse($data, $statusCode = 200)
