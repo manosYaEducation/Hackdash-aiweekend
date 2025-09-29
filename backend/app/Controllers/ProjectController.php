@@ -51,32 +51,47 @@ class ProjectController
         }
     }
 
-    public function createProjectsMember()
-    {
-         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        }
-
-        $role = $_POST['role'] ?? '';
-        $projectId = $_POST['project_id'] ?? null;
-        $email = $_POST['email'] ?? '';
-        $name = $_POST['name'] ?? '';
-
-         if (empty($email) || empty($name)) {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
-        }
-
-          $memberId = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
-
-        if ($memberId) {
-            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro de Proyecto creado exitosamente', 'member_Id' => $memberId], 201);
-        } else {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el miembro de proyecto o dashboard no encontrado.'], 500);
-        }
-
-       
-
+public function createProjectsMember()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        return;
     }
+
+    $role = $_POST['role'] ?? 'member';
+    $email = $_POST['email'] ?? '';
+    $name = $_POST['name'] ?? '';
+    $projectId = $_POST['project_id'] ?? null;
+
+    if ($projectId === '' || $projectId === 'null') {
+        $projectId = null;
+    } else {
+        $projectId = (int)$projectId;
+    }
+
+    if (empty($email) || empty($name)) {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
+        return;
+    }
+
+    $result = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
+
+    if ($result['success']) {
+        $this->sendJsonResponse([
+            'success' => true,
+            'message' => 'Miembro de Proyecto creado exitosamente',
+            'member_id' => $result['id']
+        ], 201);
+    } else {
+        $message = $result['message'] ?? 'Error al crear el miembro de proyecto.';
+        $statusCode = ($message === 'No puedes unirte a más de un proyecto.') ? 403 : 500;
+
+        $this->sendJsonResponse([
+            'success' => false,
+            'message' => $message
+        ], $statusCode);
+    }
+}
 
     public function getProjects()
     {
