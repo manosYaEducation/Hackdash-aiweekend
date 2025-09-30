@@ -19,61 +19,45 @@ class MemberController
         $this->memberModel = new MemberModel();
     }
 
-    public function createMember()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        }
-
-        $role = $_POST['role'] ?? '';
-       // $projectId = $_POST['project_id'] ?? 0;
-        $email = $_POST['email'] ?? '';
-        $name = $_POST['name'] ?? '';
-
-
-        $projectId = $_POST['project_id'] ?? null;
-
-        // Normalizamos: '' => null
-        if ($projectId === '' || $projectId === 'null') {
-            $projectId = null;
-        } else {
-            $projectId = (int)$projectId;
-        }
-
-
-         if (empty($email) || empty($name)) {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
-        }
-
-          $memberId = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
-
-        if ($memberId) {
-            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro de Proyecto creado exitosamente', 'member_Id' => $memberId], 201);
-        } else {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el miembro de proyecto o dashboard no encontrado.'], 500);
-        }
-
-    }
-
-public function getProject()
+public function createMember()
 {
-    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        return;
     }
 
-    // Tomar email desde query string
-    $email = $_GET['email'] ?? null;
+    $role = $_POST['role'] ?? 'member';
+    $email = $_POST['email'] ?? '';
+    $name = $_POST['name'] ?? '';
+    $projectId = $_POST['project_id'] ?? null;
 
-    if (!$email) {
-        $this->sendJsonResponse(['success' => false, 'message' => 'El parámetro "email" es obligatorio.'], 400);
-    }
-
-    $project = $this->memberModel->getProjectByMailMember($email);
-
-    if ($project !== null) {
-        $this->sendJsonResponse(['success' => true, 'data' => $project], 200);
+    if ($projectId === '' || $projectId === 'null') {
+        $projectId = null;
     } else {
-        $this->sendJsonResponse(['success' => false, 'message' => 'No se encontraron proyectos para este miembro.'], 404);
+        $projectId = (int)$projectId;
+    }
+
+    if (empty($email) || empty($name)) {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
+        return;
+    }
+
+    $result = $this->memberModel->addProjectMember($projectId, $name, $email, $role);
+
+    if ($result['success']) {
+        $this->sendJsonResponse([
+            'success' => true,
+            'message' => 'Miembro de Proyecto creado exitosamente',
+            'member_id' => $result['id']
+        ], 201);
+    } else {
+        $message = $result['message'] ?? 'Error al crear el miembro de proyecto.';
+        $statusCode = ($message === 'No puedes unirte a más de un proyecto.') ? 403 : 500;
+
+        $this->sendJsonResponse([
+            'success' => false,
+            'message' => $message
+        ], $statusCode);
     }
 }
 
@@ -145,21 +129,29 @@ public function getProject()
 
     public function delete()
     {
-        // if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        // }
+            // Eliminar un miembro
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
 
-        // $slug = $_POST['slug'] ?? null;
+        $memberEmail = $_POST['email'] ?? null;
+        $projectId = $_POST['project_id'] ?? null;
 
-        // if (empty($slug)) {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Slug de dashboard requerido para eliminar.'], 400);
-        // }
+        if (empty($memberEmail)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'email requerido para eliminar.'], 400);
+        }
 
-        // if ($this->dashboardModel->deleteDashboard($slug)) {
-        //     $this->sendJsonResponse(['success' => true, 'message' => 'Dashboard eliminado exitosamente'], 200);
-        // } else {
-        //     $this->sendJsonResponse(['success' => false, 'message' => 'Error al eliminar el dashboard o no se encontró.'], 500);
-        // }
+        if (empty($projectId)) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'project_id requerido para eliminar.'], 400);
+        }
+
+
+        if ($this->memberModel->deleteMember($memberEmail,$projectId)) {
+            $this->sendJsonResponse(['success' => true, 'message' => 'Miembro eliminado exitosamente'], 200);
+        } else {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Error al eliminar el miembro o no se encontró.'], 500);
+        }
+
     }
 
     private function sendJsonResponse($data, $statusCode = 200)
