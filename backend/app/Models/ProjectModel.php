@@ -23,46 +23,63 @@ class ProjectModel
         $this->memberModel = new MemberModel();
     }
 
-    public function createProject(string $dashboardSlug, string $title, string $description, string $status): ?int
-    {
-        $dashboard = $this->dashboardModel->findBySlug($dashboardSlug);
-        if (!$dashboard) {
-            return null; // Dashboard no existe
-        }
-
-        $stmt = $this->conn->prepare("INSERT INTO projects (dashboard_id, title, description, status) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$dashboard['id'], $title, $description, $status])) {
-            return (int) $this->conn->lastInsertId();
-        }
+public function createProject(string $dashboardSlug, string $title, string $description, string $status, ?string $imageData = null): ?int {
+    $dashboard = $this->dashboardModel->findBySlug($dashboardSlug);
+    if (!$dashboard) {
         return null;
     }
 
-    public function getProjectById(int $projectId): ?array
-    {
-        $stmt = $this->conn->prepare("SELECT p.*, d.slug as dashboard_slug FROM projects p JOIN dashboards d ON p.dashboard_id = d.id WHERE p.id = ?");
-        $stmt->execute([$projectId]);
-        $project = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $project ?: null;
+    $stmt = $this->conn->prepare("INSERT INTO projects (dashboard_id, title, description, status, image) VALUES (?, ?, ?, ?, ?)");
+    if ($stmt->execute([$dashboard['id'], $title, $description, $status, $imageData])) {
+        return (int) $this->conn->lastInsertId();
+    }
+    return null;
+}
+
+public function getProjectById(int $projectId): ?array
+{
+    $stmt = $this->conn->prepare("SELECT p.*, d.slug as dashboard_slug FROM projects p JOIN dashboards d ON p.dashboard_id = d.id WHERE p.id = ?");
+    $stmt->execute([$projectId]);
+    $project = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($project && !empty($project['image'])) {
+        $project['image'] = base64_encode($project['image']);
     }
 
+    return $project ?: null;
+}
     public function getProjectsByDashboardSlug(string $dashboardSlug): array
     {
         $dashboard = $this->dashboardModel->findBySlug($dashboardSlug);
         if (!$dashboard) {
+
             return [];
         }
+        
 
-        $stmt = $this->conn->prepare("SELECT * FROM projects WHERE dashboard_id = ? ORDER BY created_at DESC");
-        $stmt->execute([$dashboard['id']]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $this->conn->prepare("SELECT * FROM projects WHERE dashboard_id = ? ORDER BY created_at DESC");
+    $stmt->execute([$dashboard['id']]);
+    $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($projects as &$project) {
+        if (!empty($project['image'])) {
+            $project['image'] = base64_encode($project['image']);
+        }
     }
 
-    public function updateProject(int $projectId, string $title, string $description, string $status): bool
-    {
+    return $projects;
+}
+
+public function updateProject(int $projectId, string $title, string $description, string $status, ?string $imageData = null): bool
+{
+    if ($imageData !== null) {
+        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ?, image = ? WHERE id = ?");
+        return $stmt->execute([$title, $description, $status, $imageData === '' ? null : $imageData, $projectId]);
+    } else {
         $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ? WHERE id = ?");
         return $stmt->execute([$title, $description, $status, $projectId]);
     }
-
+}
     public function deleteProject(int $projectId): bool
     {
         $stmt = $this->conn->prepare("DELETE FROM projects WHERE id = ?");

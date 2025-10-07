@@ -22,34 +22,40 @@ class ProjectController
         $this->memberModel = new MemberModel();
     }
 
-    public function create()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        }
-
-        $title = $_POST['title'] ?? '';
-        $description = $_POST['description'] ?? '';
-        $status = $_POST['status'] ?? 'in_progress';
-        $dashboardSlug = $_POST['slug'] ?? '';
-
-        if (empty($title) || empty($description) || empty($dashboardSlug)) {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
-        }
-
-        $validStatuses = ['in_progress', 'completed'];
-        if (!in_array($status, $validStatuses)) {
-            $status = 'in_progress';
-        }
-
-        $projectId = $this->projectModel->createProject($dashboardSlug, $title, $description, $status);
-
-        if ($projectId) {
-            $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto creado exitosamente', 'project_id' => $projectId], 201);
-        } else {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el proyecto o dashboard no encontrado.'], 500);
-        }
+public function create() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
     }
+
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $status = $_POST['status'] ?? 'in_progress';
+    $dashboardSlug = $_POST['slug'] ?? '';
+
+    if (empty($title) || empty($description) || empty($dashboardSlug)) {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
+    }
+
+    $validStatuses = ['in_progress', 'completed'];
+    if (!in_array($status, $validStatuses)) {
+        $status = 'in_progress';
+    }
+
+    // Procesar imagen si fue subida
+    $imageData = null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $imageTmpPath = $_FILES['image']['tmp_name'];
+        $imageData = file_get_contents($imageTmpPath);
+    }
+
+    $projectId = $this->projectModel->createProject($dashboardSlug, $title, $description, $status, $imageData);
+
+    if ($projectId) {
+        $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto creado exitosamente', 'project_id' => $projectId], 201);
+    } else {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Error al crear el proyecto o dashboard no encontrado.'], 500);
+    }
+}
 
 public function createProjectsMember()
 {
@@ -145,32 +151,40 @@ public function createProjectsMember()
         }
     }
 
-    public function update()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
-        }
-
-        $projectId = $_POST['id'] ?? null;
-        $title = $_POST['title'] ?? '';
-        $description = $_POST['description'] ?? '';
-        $status = $_POST['status'] ?? 'in_progress';
-
-        if (empty($projectId) || empty($title) || empty($description)) {
-            $this->sendJsonResponse(['success' => false, 'message' => 'ID, título y descripción del proyecto son requeridos'], 400);
-        }
-
-        $validStatuses = ['in_progress', 'completed'];
-        if (!in_array($status, $validStatuses)) {
-            $status = 'in_progress';
-        }
-
-        if ($this->projectModel->updateProject((int)$projectId, $title, $description, $status)) {
-            $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto actualizado exitosamente'], 200);
-        } else {
-            $this->sendJsonResponse(['success' => false, 'message' => 'Error al actualizar el proyecto o no se encontró.'], 500);
-        }
+public function update()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
     }
+
+    $projectId = $_POST['id'] ?? null;
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $status = $_POST['status'] ?? 'in_progress';
+
+    if (empty($projectId) || empty($title) || empty($description)) {
+        $this->sendJsonResponse(['success' => false, 'message' => 'ID, título y descripción del proyecto son requeridos'], 400);
+    }
+
+    $validStatuses = ['in_progress', 'completed'];
+    if (!in_array($status, $validStatuses)) {
+        $status = 'in_progress';
+    }
+
+    $imageData = null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $imageTmpPath = $_FILES['image']['tmp_name'];
+        $imageData = file_get_contents($imageTmpPath);
+    }
+
+    $result = $this->projectModel->updateProject((int)$projectId, $title, $description, $status, $imageData);
+
+    if ($result) {
+        $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto actualizado exitosamente'], 200);
+    } else {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Error al actualizar el proyecto o no se encontró.'], 500);
+    }
+}
 
     public function delete()
     {
