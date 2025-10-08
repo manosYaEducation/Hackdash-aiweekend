@@ -23,14 +23,14 @@ class ProjectModel
         $this->memberModel = new MemberModel();
     }
 
-public function createProject(string $dashboardSlug, string $title, string $description, string $status, ?string $imageData = null): ?int {
+public function createProject(string $pitch, string $dashboardSlug, string $title, string $description, string $status, ?string $imageData = null): ?int {
     $dashboard = $this->dashboardModel->findBySlug($dashboardSlug);
     if (!$dashboard) {
         return null;
     }
 
-    $stmt = $this->conn->prepare("INSERT INTO projects (dashboard_id, title, description, status, image) VALUES (?, ?, ?, ?, ?)");
-    if ($stmt->execute([$dashboard['id'], $title, $description, $status, $imageData])) {
+    $stmt = $this->conn->prepare("INSERT INTO projects (dashboard_id, title, description, status, image ,pitch) VALUES (?, ?, ?, ?, ?, ?)");
+    if ($stmt->execute([$dashboard['id'], $title, $description, $status, $imageData, $pitch])) {
         return (int) $this->conn->lastInsertId();
     }
     return null;

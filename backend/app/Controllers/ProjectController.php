@@ -31,6 +31,7 @@ public function create() {
     $description = $_POST['description'] ?? '';
     $status = $_POST['status'] ?? 'in_progress';
     $dashboardSlug = $_POST['slug'] ?? '';
+    $pitch = $_POST['pitch'] ?? '';
 
     if (empty($title) || empty($description) || empty($dashboardSlug)) {
         $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos'], 400);
@@ -48,7 +49,7 @@ public function create() {
         $imageData = file_get_contents($imageTmpPath);
     }
 
-    $projectId = $this->projectModel->createProject($dashboardSlug, $title, $description, $status, $imageData);
+    $projectId = $this->projectModel->createProject($pitch, $dashboardSlug, $title, $description, $status, $imageData);
 
     if ($projectId) {
         $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto creado exitosamente', 'project_id' => $projectId], 201);
