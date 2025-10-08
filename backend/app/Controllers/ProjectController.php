@@ -162,6 +162,7 @@ public function update()
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $status = $_POST['status'] ?? 'in_progress';
+    $pitch = $_POST['pitch'] ?? null;
 
     if (empty($projectId) || empty($title) || empty($description)) {
         $this->sendJsonResponse(['success' => false, 'message' => 'ID, título y descripción del proyecto son requeridos'], 400);
@@ -178,7 +179,7 @@ public function update()
         $imageData = file_get_contents($imageTmpPath);
     }
 
-    $result = $this->projectModel->updateProject((int)$projectId, $title, $description, $status, $imageData);
+    $result = $this->projectModel->updateProject((int)$projectId, $title, $description, $status, $imageData, $pitch);
 
     if ($result) {
         $this->sendJsonResponse(['success' => true, 'message' => 'Proyecto actualizado exitosamente'], 200);

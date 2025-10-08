@@ -70,14 +70,14 @@ public function getProjectById(int $projectId): ?array
     return $projects;
 }
 
-public function updateProject(int $projectId, string $title, string $description, string $status, ?string $imageData = null): bool
+public function updateProject(int $projectId, string $title, string $description, string $status, ?string $imageData = null, $pitch): bool
 {
     if ($imageData !== null) {
-        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ?, image = ? WHERE id = ?");
-        return $stmt->execute([$title, $description, $status, $imageData === '' ? null : $imageData, $projectId]);
+        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, pitch = ? status = ?, image = ? WHERE id = ?");
+        return $stmt->execute([$title, $description, $pitch, $status, $imageData === '' ? null : $imageData, $projectId]);
     } else {
-        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, status = ? WHERE id = ?");
-        return $stmt->execute([$title, $description, $status, $projectId]);
+        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, pitch = ? , status = ? WHERE id = ?");
+        return $stmt->execute([$title, $description, $pitch, $status, $projectId]);
     }
 }
     public function deleteProject(int $projectId): bool
