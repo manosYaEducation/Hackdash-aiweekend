@@ -73,7 +73,7 @@ public function getProjectById(int $projectId): ?array
 public function updateProject(int $projectId, string $title, string $description, string $status, ?string $imageData = null, $pitch): bool
 {
     if ($imageData !== null) {
-        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, pitch = ? status = ?, image = ? WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, pitch = ?, status = ?, image = ? WHERE id = ?");
         return $stmt->execute([$title, $description, $pitch, $status, $imageData === '' ? null : $imageData, $projectId]);
     } else {
         $stmt = $this->conn->prepare("UPDATE projects SET title = ?, description = ?, pitch = ? , status = ? WHERE id = ?");
