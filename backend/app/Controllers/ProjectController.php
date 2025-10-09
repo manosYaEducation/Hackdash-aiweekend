@@ -225,7 +225,6 @@ public function update()
 
     public function getFiles()
     {
-        // This will require a FileModel later
         $this->sendJsonResponse(['success' => true, 'files' => []], 200);
     }
 
@@ -247,7 +246,6 @@ public function update()
 
     public function getActivity()
     {
-        // This will require an ActivityModel later
         $this->sendJsonResponse(['success' => true, 'activity' => []], 200);
     }
 
@@ -258,4 +256,92 @@ public function update()
         echo json_encode($data);
         exit;
     }
+
+    public function sendJoinRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+             $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+             }
+
+        $projectId = $_POST['project_id'] ?? null;
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        if (!$projectId || !$name || !$email) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Faltan datos requeridos.'], 400);
+        }
+
+        $joinModel = new \App\Backend\Models\JoinRequestModel();
+        $result = $joinModel->createRequest((int)$projectId, $name, $email);
+        $statusCode = $result['success'] ? 201 : 400;
+         $this->sendJsonResponse($result, $statusCode);
+    }
+    public function getJoinRequests()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+        
+        $projectId = $_GET['project_id'] ?? null;
+        if (!$projectId) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID de proyecto requerido.'], 400);
+        }
+
+        $joinModel = new \App\Backend\Models\JoinRequestModel();
+        $requests = $joinModel->getPendingRequests((int)$projectId);
+        $this->sendJsonResponse(['success' => true, 'requests' => $requests], 200);
+    }
+
+    public function approveJoinRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $requestId = $_POST['request_id'] ?? null;
+        if (!$requestId) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID de solicitud requerido.'], 400);
+        }
+        $joinModel = new \App\Backend\Models\JoinRequestModel();
+        $request = $joinModel->getRequestById((int)$requestId);
+
+        if (!$request || $request['status'] !== 'pending') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Solicitud no encontrada o ya procesada.'], 404);
+        }
+
+        $memberResult = $this->memberModel->addProjectMember(
+            (int)$request['project_id'],
+            $request['user_name'],
+            $request['email'],
+            'member'
+        );
+        if (!$memberResult['success']) {
+            $this->sendJsonResponse(['success' => false, 'message' => $memberResult['message']], 500);
+        }
+
+        $joinModel->updateStatus((int)$requestId, 'approved');
+        $this->sendJsonResponse(['success' => true, 'message' => 'Solicitud aprobada y miembro agregado.'], 200);
+    }
+
+    public function rejectJoinRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+        }
+
+        $requestId = $_POST['request_id'] ?? null;
+        if (!$requestId) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'ID de solicitud requerido.'], 400);
+        }
+        
+        $joinModel = new \App\Backend\Models\JoinRequestModel();
+        $request = $joinModel->getRequestById((int)$requestId);
+
+        if (!$request || $request['status'] !== 'pending') {
+        $this->sendJsonResponse(['success' => false, 'message' => 'Solicitud no encontrada o ya procesada.'], 404);
+    }
+
+    $joinModel->updateStatus((int)$requestId, 'rejected');
+    $this->sendJsonResponse(['success' => true, 'message' => 'Solicitud rechazada.'], 200);
+    }
+
 }
