@@ -26,6 +26,12 @@ return [
     'project/tasks' => ['controller' => ProjectController::class, 'method' => 'getTasks', 'httpMethod' => 'GET'],
     'project/activity' => ['controller' => ProjectController::class, 'method' => 'getActivity', 'httpMethod' => 'GET'],
     'project/createProjectMember' => ['controller' => ProjectController::class, 'method' => 'createProjectsMember', 'httpMethod' => 'POST'],
+    // Solicitudes para unirse a proyectos
+    'project/sendJoinRequest' => ['controller' => ProjectController::class, 'method' => 'sendJoinRequest', 'httpMethod' => 'POST'],
+    'project/getJoinRequests' => ['controller' => ProjectController::class, 'method' => 'getJoinRequests', 'httpMethod' => 'GET'],
+    'project/approveJoinRequest' => ['controller' => ProjectController::class, 'method' => 'approveJoinRequest', 'httpMethod' => 'POST'],
+    'project/rejectJoinRequest' => ['controller' => ProjectController::class, 'method' => 'rejectJoinRequest', 'httpMethod' => 'POST'],
+
 
     // Rutas para Tareas
     'task/create' => ['controller' => TaskController::class, 'method' => 'create', 'httpMethod' => 'POST'],
