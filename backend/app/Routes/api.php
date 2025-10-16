@@ -31,7 +31,7 @@ return [
     'project/getJoinRequests' => ['controller' => ProjectController::class, 'method' => 'getJoinRequests', 'httpMethod' => 'GET'],
     'project/approveJoinRequest' => ['controller' => ProjectController::class, 'method' => 'approveJoinRequest', 'httpMethod' => 'POST'],
     'project/rejectJoinRequest' => ['controller' => ProjectController::class, 'method' => 'rejectJoinRequest', 'httpMethod' => 'POST'],
-
+    'project/getFollowedProjects' => ['controller' => ProjectController::class, 'method' => 'getFollowedProjects', 'httpMethod' => 'GET'],
 
     // Rutas para Tareas
     'task/create' => ['controller' => TaskController::class, 'method' => 'create', 'httpMethod' => 'POST'],

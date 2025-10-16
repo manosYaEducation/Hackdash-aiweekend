@@ -343,5 +343,32 @@ public function update()
     $joinModel->updateStatus((int)$requestId, 'rejected');
     $this->sendJsonResponse(['success' => true, 'message' => 'Solicitud rechazada.'], 200);
     }
+    public function getFollowedProjects()
+    {
+    try {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Método no permitido'], 405);
+            return;
+        }
+
+        $email = $_GET['email'] ?? null;
+        $email = strtolower(trim($email));
+        if (!$email) {
+            $this->sendJsonResponse(['success' => false, 'message' => 'Email requerido.'], 400);
+            return;
+        }
+        $joinModel = new \App\Backend\Models\JoinRequestModel();
+        $projects = $joinModel->getFollowedProjectsByEmail($email);
+
+        $this->sendJsonResponse(['success' => true, 'projects' => $projects], 200);
+    } catch (\Exception $e) {
+
+        $this->sendJsonResponse([
+            'success' => false,
+            'message' => 'Ocurrió un error al obtener los proyectos seguidos.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
 }

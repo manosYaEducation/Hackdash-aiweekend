@@ -52,4 +52,19 @@ class JoinRequestModel
         $stmt->execute([$requestId]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+    
+    public function getFollowedProjectsByEmail(string $email): array
+    {
+        $stmt = $this->conn->prepare('
+        SELECT p.id, p.title , p.description
+        FROM join_requests jr
+        INNER JOIN projects p ON jr.project_id = p.id
+        WHERE jr.email = :email
+    ');
+    $stmt->execute(['email' => $email]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+}
+
+
