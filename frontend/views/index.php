@@ -105,8 +105,8 @@
 
         <p>Versión 0.1 
 
-        Mauro Rojas Gen 16
-        Mauro Rojas Gen 16 2da version
+        Jose de las perdices
+        laura gen 16
 
         </p>
       </div>
