@@ -101,6 +101,13 @@
         <a href="#">Términos de Servicio</a>
         <a href="#">Política de Privacidad</a>
         <a href="#">Contacto</a>
+
+
+        <p>Versión 0.1 
+
+        Mauro Rojas Gen 16
+
+        </p>
       </div>
     </footer>
   </div>
